@@ -4,24 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Data Visualization</title>
-  <script type="text/javascript "src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script> 
-<!-- <script>
-$(document).ready(function(){
-    $.ajax({url: "http://localhost:5000/report/?query=school_data&startDt=2019-06-06&endDt=2019-06-07", success: function(result){
-     console.log(result);
-    },
-  failure: function(XMLHttpRequest, textStatus, errorThrown) { 
-            alert("Status: " + textStatus); //alert("Error: " + errorThrown); 
-            console.log(XMLHttpRequest);
-          }
-  })
-})
-</script> -->
-     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="main.js"></script> 
+    <title>Data Visualization 1</title>
+    <script type="text/javascript "src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script> 
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="main.js"></script> 
 </head>
 <body>
-    <div id="chart_div"></div>
+    <div id="list">
+        <ul>
+                <a href="javascript:void(0)"  id="school_data"><li >School Range</li></a>
+                <a href="javascript:void(0)" id="school_strength"><li>School Strength</li></a>
+                <a href="javascript:void(0)" id="user_info"><li>User Information</li></a>
+                <a href="javascript:void(0)" id="daily_quiz_class_subject"><li>Daily quizzes (on the basis of class and subject)</li></a>
+                <a href="javascript:void(0)" id="daily_quiz_count"><li>Daily quizzes</li></a>
+                <a href="javascript:void(0)" id="daily_user_count_quiz"><li>Daily Users</li></a>
+        </ul>
+    </div>
+
+    <div id="date" style="display: none">
+        <label>Start Date</label>
+        <input type="date" id="startDt">
+        <br>
+        <label>End Date</label>
+        <input type="date" id="endDt">
+        <br>
+        <button id="btn">Submit</button>
+    </div>
+
+    <div id="chart_div" style="width: 800px; height: 500px; display: none"></div>
 </body>
 </html>

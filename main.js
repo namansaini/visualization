@@ -1,47 +1,149 @@
-console.log("Hi");
-google.charts.load('current', {packages: ['corechart']});
-google.charts.setOnLoadCallback(drawChart);
-function drawChart()
-{
-    let jsonData=$(document).ready(function(){
-        $.ajax({url: "http://localhost:5000/report/?query=school_data&startDt=2019-06-06&endDt=2019-06-07",
-        success:function(jsonData)
+$(document).ready(function(){
+    var query;
+    var startDt;
+    var endDt;
+    google.charts.load('current', {packages: ['bar','corechart']});
+    function drawChart()
+    {
+        $(document).ready(function()
         {
-            var data = new google.visualization.DataTable();
-            data.addColumn('string', 'range');
-            data.addColumn('number', 'count');
-            for (var i = 0; i < jsonData.length; i++) {
-                data.addRow([jsonData[i].range, jsonData[i].count]);
+            var link="http://localhost:5000/report/?query="+query+"&startDt="+startDt+"&endDt="+endDt;
+            console.log(link);
+            $.ajax({url: link,//"http://localhost:5000/report/?query=school_data&startDt=2019-06-06&endDt=2019-06-07",
+            success:function(jsonData)
+            {
+                var jsonObj = JSON.parse(jsonData);
+                if(query=="school_data")
+                {
+                    
+                    
+                    var dateLookup = {},  rangeLookup = {};
+                    var uniqueDates = [], uniqueRanges = [];
+                    for (var item, i = 0;item = jsonObj[i++];) {
+                        var date = item.date;
+                        if (!(date in dateLookup)) {
+                            dateLookup[date] = 1;
+                            uniqueDates.push(date);
+                        }
+                        
+                        var range = item.range;
+                        if (!(range in rangeLookup)) {
+                            rangeLookup[range] = 1;
+                            uniqueRanges.push(range);
+                        }
+                    }
+                    console.log(uniqueDates);
+                    console.log(uniqueRanges);
+
+                    var responseJson = [];
+                    var heading = [];
+                    heading.push('Range');
+                    for(i = 0; i < uniqueDates.length; i++)
+                        heading.push(uniqueDates[i]);
+                    console.log(heading);
+                    responseJson.push(heading);
+
+                    function getCount(range, date){
+                        for (var item, i = 0; item = jsonObj[i++];) {
+                            if(item.range == range && item.date == date)
+                                return item.count;
+                        }
+                        return 0;
+                    }
+                    for (i = 0; i < uniqueRanges.length; i++) {
+                        var item = [uniqueRanges[i]];
+                        for(j = 0; j < uniqueDates.length; j++){
+                            item.push( getCount(uniqueRanges[i], uniqueDates[j],jsonData));
+                            console.log(uniqueRanges[i]+" "+uniqueDates[j]+" "+getCount(uniqueRanges[i], uniqueDates[j]));
+                        }
+                        responseJson.push(item);
+                    }
+
+                    console.log(responseJson);
+
+                    
+                    var data = google.visualization.arrayToDataTable(responseJson);
+                    var options = {
+                        chart: {
+                        title: 'School Data'
+                        //subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+                        }
+                    };
+                    
+                    var chart = new google.charts.Bar(document.getElementById("chart_div"));
+                    chart.draw(data, google.charts.Bar.convertOptions(options));
+                }
+                else
+                if(query=="school_strength")
+                {
+                    var responseJson = [];
+                    var heading = [];
+                    heading.push('School');
+                    heading.push('Count');
+                    responseJson.push(heading);
+                    for(var item,i=0;item=jsonObj[i++];)
+                    {
+                        var school=[item.unique_id];
+                        school.push(item.count);
+                        responseJson.push(school);
+                    }
+                    console.log(responseJson);
+                    var data = google.visualization.arrayToDataTable(responseJson);
+                    var options = {
+                        chart: {
+                        title: 'School Strength'
+                        }
+                    };
+                    
+                    var chart = new google.charts.Bar(document.getElementById("chart_div"));
+                    chart.draw(data, google.charts.Bar.convertOptions(options));
+                }
             }
-            var options = {
-                'title': 'Visualized Data...'//,
-                //'is3D': true
-            };
-            var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
-            chart.draw(data, options);
-        }
-    })
-    })
-    //let data = new google.visualization.DataTable(jsonData);
-   // console.log(data);
-    //var data = new google.visualization.DataTable();
-    // data.addColumn('string', 'Topping');
-    // data.addColumn('number', 'Slices');
-    // data.addRows([
-    //     ['Mushrooms', 3],
-    //     ['Onions', 1],
-    //     ['Olives', 1], 
-    //     ['Zucchini', 1],
-    //     ['Pepperoni', 2]
-    // ]);
+            
+        })
+        })
+    }
 
-//     var options = {'title':'Visualized Data...',
-//                     'width':400,
-//                     'height':240,
-//                     'is3D':true};
 
-//     var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-//     chart.draw(data, options);
-// 
-}
+
+
+$("#btn").click(function()
+{
+    startDt=$("#startDt").val();
+    endDt=$("#endDt").val();
+    $("#date").css('display','none');
+    $("#list").css('display','none');
+    $("#chart_div").css('display','block');
+    google.charts.setOnLoadCallback(drawChart);
+})
+$( "#school_data" ).click(function() {
+    query="school_data";
+    $("#date").css('display','block');
+});
+$( "#school_strength" ).click(function() {
+    query="school_strength";
+    $("#date").css('display','block');
+});
+$( "#user_info" ).click(function() {
+    query="user_info";
+    $("#date").css('display','block');
+});
+$( "#daily_quiz_class_subject" ).click(function() {
+    query="daily_quiz_class_subject";
+    $("#date").css('display','block');
+});
+$( "#daily_quiz_count" ).click(function() {
+    query="daily_quiz_count";
+    $("#date").css('display','block');
+});
+$( "#daily_user_count_quiz" ).click(function() {
+    query="daily_user_count_quiz";
+    $("#date").css('display','block');
+});
+
+
+})
+
+
+
 
