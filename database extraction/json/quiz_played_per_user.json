@@ -1,0 +1,36 @@
+{
+	"jobName": "quiz_played_per_user",
+	"source": {
+		"dbType": "mongodb",
+		"host": "localhost",
+		"port": "27017",
+		"dbName": "quiz_data",
+		"collection": "asessement_level_data"
+	},
+	"destination": {
+		"dbType": "mongodb",
+		"host": "localhost",
+		"port": "27017",
+		"dbName": "quiz_report_data",
+		"collection": "quiz_played_per_user"
+	},
+	"runTimeArguments": [
+	],
+	"startDate": 74,
+	"endDate": 73,
+	"query": [
+        {
+			"$match":{
+				"createdOn":{ "$gte": "startDate", "$lte": "endDate"	}
+			}
+		},
+		{
+			"$group": {
+				"_id": {"user":"$uuid"}, "quiz_count":{"$sum":1},"userName":{"$last":"$userName"},"className":{"$last":"$className"},"subjectName":{"$last":"$subjectName"}
+			}
+		}
+	],
+	"additionalOutput": {
+		"lastDate": "date"
+	}
+}

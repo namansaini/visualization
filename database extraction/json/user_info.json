@@ -1,0 +1,39 @@
+{
+	"jobName": "user_info",
+	"source": {
+		"dbType": "mongodb",
+		"host": "localhost",
+		"port": "27017",
+		"dbName": "prod_log",
+		"collection": "prod_log"
+	},
+	"destination": {
+		"dbType": "mongodb",
+		"host": "localhost",
+		"port": "27017",
+		"dbName": "dest_prod_log",
+		"collection": "user_info"
+	},
+	"runTimeArguments": [
+	],
+	"startDate": 74,
+	"endDate": 73,
+	"query": [
+		{
+			"$match":{
+				"accessDT":{ "$gte": "startDate", "$lte": "endDate"	},
+				"UUID":{"$nin": [null, "",false]}
+				
+			}
+		},
+		{
+			"$group": {
+				"_id": {"UUID":"$UUID","time_spent":"$time_spent",
+				"role_name":"$role_name","school_name":"$school_name","class_name":"$class_name"},"count":{"$sum":1}
+			}
+		}
+	],
+	"additionalOutput": {
+		"lastDate": "date"
+	}
+}

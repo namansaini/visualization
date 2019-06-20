@@ -1,0 +1,41 @@
+{
+	"jobName": "daily_quiz_count",
+	"source": {
+		"dbType": "mongodb",
+		"host": "localhost",
+		"port": "27017",
+		"dbName": "quiz_data",
+		"collection": "asessement_level_data"
+	},
+	"destination": {
+		"dbType": "mongodb",
+		"host": "localhost",
+		"port": "27017",
+		"dbName": "quiz_report_data",
+		"collection": "daily_quiz_count"
+	},
+	"runTimeArguments": [
+	],
+	"startDate": 71,
+	"endDate": 70,
+	"query": [
+		{
+			"$match":{
+				"createdOn":{ "$gte": "startDate", "$lte": "endDate"	}
+			}
+		},
+		{
+			"$group": {
+				"_id": null, "count": {"$sum": 1}
+			}
+		},
+		{
+			"$project": {
+				"_id":0
+			}
+		}
+	],
+	"additionalOutput": {
+		"lastDate": "date"
+	}
+}

@@ -1,0 +1,43 @@
+{
+	"jobName": "school_strength",
+	"source": {
+		"dbType": "mongodb",
+		"host": "localhost",
+		"port": "27017",
+		"dbName": "prod_log",
+		"collection": "prod_log"
+	},
+	"destination": {
+		"dbType": "mongodb",
+		"host": "localhost",
+		"port": "27017",
+		"dbName": "dest_prod_log",
+		"collection": "school_strength"
+	},
+	"runTimeArguments": [
+	],
+	"startDate": 74,
+	"endDate": 73,
+	"query": [
+		{
+			"$match":{
+				"accessDT":{ "$gte": "startDate", "$lte": "endDate"	},
+				"UUID":{"$nin": [null, ""]},
+				"school_name":{"$nin": [false]}
+			}
+		},
+		{
+			"$group": {
+				"_id": {"unique_id":"$school_name"}, "unique_users":{"$addToSet":"$UUID"}
+			}
+		},
+		{
+			"$project":{
+				"_id":1,"count":{"$size":"$unique_users"}
+			}
+		}
+	],
+	"additionalOutput": {
+		"lastDate": "date"
+	}
+}

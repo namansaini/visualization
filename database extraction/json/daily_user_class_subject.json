@@ -1,0 +1,42 @@
+{
+	"jobName": "daily_user_class_subject",
+	"source": {
+		"dbType": "mongodb",
+		"host": "localhost",
+		"port": "27017",
+		"dbName": "quiz_data",
+		"collection": "asessement_level_data"
+	},
+	"destination": {
+		"dbType": "mongodb",
+		"host": "localhost",
+		"port": "27017",
+		"dbName": "quiz_report_data",
+		"collection": "daily_user_class_subject"
+	},
+	"runTimeArguments": [
+	],
+	"startDate": 64,
+	"endDate": 63,
+	"query": [
+        {
+			"$match":{
+				"createdOn":{ "$gte": "startDate", "$lte": "endDate"},
+				"uuid":{"$nin": [null, ""]}
+			}
+		},
+		{
+			"$group": {
+				"_id": {"className":"$className","subjectName":"$subjectName"}, "uniqueValues": {"$addToSet": "$uuid"}
+			}
+		},
+		{
+			"$project": {
+				"_id":1, "count": {"$size": "$uniqueValues"}
+			}
+        }
+	],
+	"additionalOutput": {
+		"lastDate": "date"
+	}
+}
