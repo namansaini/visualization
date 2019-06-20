@@ -15,49 +15,109 @@ app.config["DEBUG"] = True
 connection=pymongo.MongoClient('localhost',27017)
 CORS(app)
 
-@app.route('/report/', methods=['GET'])
-def api_all():
+#1
+@app.route('/report/school_data', methods=['GET'])
+def school_data():
     query_parameters = request.args
-    query=query_parameters.get('query')
     startDt=query_parameters.get('startDt')
     endDt=query_parameters.get('endDt')
     
-    if not (query or startDt or endDt):
+    if not (startDt or endDt):
         return "<h1>One or More Arguments not Specified</h1>"
-    elif(query=='school_data'):
-        database=connection['dest_prod_log']
-        collection=database['dest_prod_log']
-        return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    database=connection['dest_prod_log']
+    collection=database['dest_prod_log']
+    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+#2   
+@app.route('/report/school_strength', methods=['GET'])
+def school_strength():
+    query_parameters = request.args
+    startDt=query_parameters.get('startDt')
+    endDt=query_parameters.get('endDt')
     
-    elif(query=='school_strength'):
-        database=connection['dest_prod_log']
-        collection=database['school_strength']
-        return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    if not (startDt or endDt):
+        return "<h1>One or More Arguments not Specified</h1>"
+    database=connection['dest_prod_log']
+    collection=database['school_strength']
+    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+#3
+@app.route('/report/user_info', methods=['GET'])
+def user_info():
+    query_parameters = request.args
+    startDt=query_parameters.get('startDt')
+    endDt=query_parameters.get('endDt')
     
-    elif(query=='user_info'):
-        database=connection['dest_prod_log']
-        collection=database['user_info']
-        return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    if not (startDt or endDt):
+        return "<h1>One or More Arguments not Specified</h1>"
+    database=connection['dest_prod_log']
+    collection=database['user_info']
+    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+#4
+@app.route('/report/daily_quiz_class_subject', methods=['GET'])
+def daily_quiz_class_subject():
+    query_parameters = request.args
+    startDt=query_parameters.get('startDt')
+    endDt=query_parameters.get('endDt')
     
-    elif(query=='daily_quiz_class_subject'):
-        database=connection['quiz_report_data']
-        collection=database['daily_quiz_class_subject']
-        return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    if not (startDt or endDt):
+        return "<h1>One or More Arguments not Specified</h1>"
+    database=connection['quiz_report_data']
+    collection=database['daily_quiz_class_subject']
+    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+#5
+@app.route('/report/daily_quiz_count', methods=['GET'])
+def daily_quiz_count():
+    query_parameters = request.args
+    startDt=query_parameters.get('startDt')
+    endDt=query_parameters.get('endDt')
     
-    elif(query=='daily_quiz_count'):
-        database=connection['quiz_report_data']
-        collection=database['daily_quiz_count']
-        return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    if not (startDt or endDt):
+        return "<h1>One or More Arguments not Specified</h1>"
+    database=connection['quiz_report_data']
+    collection=database['daily_quiz_count']
+    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+
+
+
+#6  
+@app.route('/report/daily_user_class_subject', methods=['GET'])
+def daily_user_class_subject():
+    query_parameters = request.args
+    startDt=query_parameters.get('startDt')
+    endDt=query_parameters.get('endDt')
     
-    elif(query=='daily_users_count_quiz'):
-        database=connection['quiz_report_data']
-        collection=database['daily_users_count_quiz']
-        return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    if not (startDt or endDt):
+        return "<h1>One or More Arguments not Specified</h1>"
+    database=connection['quiz_report_data']
+    collection=database['daily_user_class_subject']
+    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+
+#7
+@app.route('/report/daily_users_count_quiz', methods=['GET'])
+def daily_users_count_quiz():
+    query_parameters = request.args
+    startDt=query_parameters.get('startDt')
+    endDt=query_parameters.get('endDt')
     
-    else:
-        return "<h1>Invalid Parameter</h1>"
+    if not (startDt or endDt):
+        return "<h1>One or More Arguments not Specified</h1>"
+    database=connection['quiz_report_data']
+    collection=database['daily_users_count_quiz']
+    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+
+#8
+@app.route('/report/quiz_played_per_user', methods=['GET'])
+def quiz_played_per_user():
+    query_parameters = request.args
+    startDt=query_parameters.get('startDt')
+    endDt=query_parameters.get('endDt')
     
+    if not (startDt or endDt):
+        return "<h1>One or More Arguments not Specified</h1>"
+    database=connection['quiz_report_data']
+    collection=database['quiz_played_per_user']
+    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
 @app.errorhandler(404)
 def page_not_found(e):
     return "<h1>404</h1><p>The resource could not be found.</p>", 404
+
 app.run()
