@@ -28,8 +28,8 @@
 		},
 		{
 			"$group": {
-				"_id": {"UUID":"$UUID","time_spent":"$time_spent",
-				"role_name":"$role_name","school_name":"$school_name","class_name":"$class_name"},"count":{"$sum":1}
+				"_id": {"UUID":"$UUID",
+				"role_name":"$role_name","school_name":"$school_name","class_name":"$class_name"},"time_spent":{"$sum":"$sessionDuartion"},"count":{"$sum":1}
 			}
 		}
 	],

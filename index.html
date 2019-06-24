@@ -5,14 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Data Visualization 1</title>
-    <script type="text/javascript "src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script> 
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script> 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="main.js"></script> 
 </head>
 <body>
-    <div id="list">
+    
+    <div id="list" class="w3-ul card">
         <ul>
-                <a href="javascript:void(0)"  id="school_data"><li >School Range</li></a>
+                <h3 class="w3-center">Click on the Option you want to select</h3>
+                <a href="javascript:void(0)" id="school_range"><li>School Range</li></a>
                 <a href="javascript:void(0)" id="school_strength"><li>School Strength</li></a>
                 <a href="javascript:void(0)" id="user_info"><li>User Information</li></a>
                 <a href="javascript:void(0)" id="daily_quiz_class_subject"><li>Daily quizzes (on the basis of class and subject)</li></a>
@@ -20,22 +27,29 @@
                 <a href="javascript:void(0)" id="daily_user_class_subject"><li>Daily Users (on the basis of class and subject)</li></a>
                 <a href="javascript:void(0)" id="daily_users_count_quiz"><li>Daily Users</li></a>
                 <a href="javascript:void(0)" id="quiz_played_per_user"><li>No of quizzes played per user</li></a>
+                <a href="javascript:void(0)" id="daily_time_spent_user_quiz"><li>Daily Time Spent per User</li></a>
+                <a href="javascript:void(0)" id="daily_time_per_user_class_subject"><li>Daily Time Spent per User(on the basis of class and subject)</li></a>
         </ul>
     </div>
 
     <div>
         <h1 id="title" style="display:none"></h1>
     </div>
-    <div id="date" style="display: none">
+    <div id="month" class="w3-container w3-center"style="display: none; width: 20%">
+        <label>Start Month</label>
+        <input class="w3-input" type="month" id="startMonth">
+        <label>End Month</label>
+        <input class="w3-input" type="month" id="endMonth">
+        <button id="btn2" class="w3-button w3-black">Submit</button>
+    </div>
+    <div id="date" class="w3-container w3-center" style="display: none; width: 20%">
         <label>Start Date</label>
-        <input type="date" id="startDt">
-        <br>
+        <input class="w3-input" type="date" id="startDt">
         <label>End Date</label>
-        <input type="date" id="endDt">
-        <br>
-        <button id="btn">Submit</button>
+        <input class="w3-input" type="date" id="endDt">
+        <button id="btn" class="w3-button w3-black">Submit</button>
     </div>
 
-    <div id="chart_div" style="width: 800px; height: 500px; display: none"></div>
+    <div id="chart_div" style=" display: none"></div>
 </body>
 </html>

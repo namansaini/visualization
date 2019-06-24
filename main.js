@@ -2,58 +2,68 @@ $(document).ready(function(){
     var query;
     var startDt;
     var endDt;
+    var startMonth;
+    var endMonth;
     google.charts.load('current', {packages: ['bar','corechart','table']});
     function drawChart()
     {
         $(document).ready(function()
         {
-            var link=`http://localhost:5000/report/${query}?startDt=${startDt}&endDt=${endDt}`;
+            if(query=="school_range")
+            {
+                var link=`http://localhost:5000/report/${query}?startMonth=${startMonth}&endMonth=${endMonth}`
+            }
+            else
+            {
+                var link=`http://localhost:5000/report/${query}?startDt=${startDt}&endDt=${endDt}`;
+            }
             console.log(link);
-            $.ajax({url: link,//"http://localhost:5000/report/school_data?startDt=2019-06-06&endDt=2019-06-07",
+            $.ajax({url: link,//"http://localhost:5000/report/school_range?startMonth=2019-04&endMonth=2019-06",
             success:function(jsonData)
             {
+                console.log(jsonData);
                 var jsonObj = JSON.parse(jsonData);
                 console.log(jsonData);
-                if(query=="school_data")
+                if(query=="school_range")
                 {
-                    var dateLookup = {},  rangeLookup = {};
-                    var uniqueDates = [], uniqueRanges = [];
+                    var monthLookup = {},  rangeLookup = {};
+                    var uniqueMonths = [], uniqueRanges = [];
                     for (var item, i = 0;item = jsonObj[i++];) {
-                        var date = item.date;
-                        if (!(date in dateLookup)) {
-                            dateLookup[date] = 1;
-                            uniqueDates.push(date);
+                        var month = item.month;
+                        if (!(month in monthLookup)) {
+                            monthLookup[month] = 1;
+                            uniqueMonths.push(month);
                         }
                         
-                        var range = item.range;
+                        var range = item.type;
                         if (!(range in rangeLookup)) {
                             rangeLookup[range] = 1;
                             uniqueRanges.push(range);
                         }
                     }
-                    console.log(uniqueDates);
+                    console.log(uniqueMonths);
                     console.log(uniqueRanges);
 
                     var responseJson = [];
                     var heading = [];
                     heading.push('Range');
-                    for(i = 0; i < uniqueDates.length; i++)
-                        heading.push(uniqueDates[i]);
+                    for(i = 0; i < uniqueMonths.length; i++)
+                        heading.push(uniqueMonths[i]);
                     console.log(heading);
                     responseJson.push(heading);
 
-                    function getCount(range, date){
+                    function getCount(range, month){
                         for (var item, i = 0; item = jsonObj[i++];) {
-                            if(item.range == range && item.date == date)
+                            if(item.type == range && item.month == month)
                                 return item.count;
                         }
                         return 0;
                     }
                     for (i = 0; i < uniqueRanges.length; i++) {
                         var item = [uniqueRanges[i]];
-                        for(j = 0; j < uniqueDates.length; j++){
-                            item.push( getCount(uniqueRanges[i], uniqueDates[j],jsonData));
-                            console.log(uniqueRanges[i]+" "+uniqueDates[j]+" "+getCount(uniqueRanges[i], uniqueDates[j]));
+                        for(j = 0; j < uniqueMonths.length; j++){
+                            item.push( getCount(uniqueRanges[i], uniqueMonths[j],jsonData));
+                            console.log(uniqueRanges[i]+" "+uniqueMonths[j]+" "+getCount(uniqueRanges[i], uniqueMonths[j]));
                         }
                         responseJson.push(item);
                     }
@@ -85,7 +95,7 @@ $(document).ready(function(){
                     //responseJson.push(heading);
                     for(var item,i=0;item=jsonObj[i++];)
                     {
-                        var temp=[item.unique_id];
+                        var temp=[item.school_name];
                         temp.push(item.count);
                         responseJson.push(temp);
                     }
@@ -107,6 +117,7 @@ $(document).ready(function(){
                     data.addColumn('string','Role Name')
                     data.addColumn('string','School Name')
                     data.addColumn('string','Class Name')
+                    data.addColumn('number', 'Time Spent')
                     data.addColumn('number','Count');
                     //responseJson.push(heading);
                     for(var item,i=0;item=jsonObj[i++];)
@@ -116,6 +127,7 @@ $(document).ready(function(){
                         temp.push(item.school_name);
                         temp.push(item.class_name);
                         temp.push(item.count);
+                        temp.push(item.time_spent);
                         responseJson.push(temp);
                     }
                     console.log(responseJson);
@@ -256,6 +268,14 @@ $(document).ready(function(){
                     var table = new google.visualization.Table(document.getElementById("chart_div"));
                     table.draw(data, {showRowNumber: false, width: '100%', height: '100%'});
                 }
+                else if(query=="daily_time_spent_user_quiz")
+                {
+
+                }
+                else if(query=="daily_time_per_user_class_subject")
+                {
+
+                }
 
             }
             
@@ -270,15 +290,24 @@ $("#btn").click(function()
 {
     startDt=$("#startDt").val();
     endDt=$("#endDt").val();
-    $("#date").css('display','none');
-    $("#list").css('display','none');
     $("#chart_div").css('display','block');
-   
+
     google.charts.setOnLoadCallback(drawChart);
 })
-$( "#school_data" ).click(function() {
-    query="school_data";
-    $("#date").css('display','block');
+
+$("#btn2").click(function()
+{
+    startMonth=$("#startMonth").val();
+    endMonth=$("#endMonth").val();
+    console.log(startMonth);
+    $("#chart_div").css('display','block');
+
+    google.charts.setOnLoadCallback(drawChart);
+})
+
+$( "#school_range" ).click(function() {
+    query="school_range";
+    $("#month").css('display','block');
 });
 $( "#school_strength" ).click(function() {
 
@@ -310,6 +339,16 @@ $( "#daily_users_count_quiz" ).click(function() {
 
 $( "#quiz_played_per_user" ).click(function() {
     query="quiz_played_per_user";
+    $("#date").css('display','block');
+});
+
+$( "#daily_time_spent_user_quiz" ).click(function() {
+    query="daily_time_spent_user_quiz";
+    $("#date").css('display','block');
+});
+
+$( "#daily_time_per_user_class_subject" ).click(function() {
+    query="daily_time_per_user_class_subject";
     $("#date").css('display','block');
 });
 

@@ -1,0 +1,68 @@
+{
+	"jobName": "school_range",
+	"source": {
+		"dbType": "mongodb",
+		"host": "localhost",
+		"port": "27017",
+		"dbName": "prod_log",
+		"collection": "prod_log"
+	},
+	"destination": {
+		"dbType": "mongodb",
+		"host": "localhost",
+		"port": "27017",
+		"dbName": "dest_prod_log",
+		"collection": "school_range"
+	},
+	"runTimeArguments": [
+	],
+	"startDate": 30,
+	"endDate": 1,
+	"jobExecution":"monthly",
+	"query": [
+		{
+			"$match":{
+				"accessDT":{ "$gte": "startDate", "$lte": "endDate"	}
+			}
+		},
+		{
+			"$group": {
+				"_id": { "school_id": "$school_id", "UUID": "$UUID" },
+				"eventCount": { "$sum": 1 }
+			}
+		},
+		{
+			"$group": {
+				"_id": { "school_id": "$_id.school_id"	},
+				"totalEventCount": { "$sum": "$eventCount" },
+				"distinctUUIDs": { "$sum": 1 }
+			}
+		},
+		{
+			"$project": {
+				"type": {
+					"$switch":{
+						"branches": [	
+							{ "case": { "$lte": ["$distinctUUIDs", 50]  }, "then": "1. (0-50)"	},
+							{ "case": { "$lte": ["$distinctUUIDs", 200]  }, "then": "2. (50-200)"	},
+							{ "case": { "$lte": ["$distinctUUIDs", 500]  }, "then": "3. (200-500)"	},
+							{ "case": { "$lte": ["$distinctUUIDs", 1000]  }, "then": "4. (500-1000)"	},
+							{ "case": { "$lte": ["$distinctUUIDs", 2000]  }, "then": "5. (1000-2000)"	}
+						],
+						"default": "6. (above 2000)"
+					}
+				}
+			}
+		},
+		{
+			"$group": {
+				"_id": { "type":"$type" },
+				"count": { "$sum": 1 }
+			}
+		}
+	],
+	"additionalOutput": {
+		"lastDate": "date",
+		"currentMonth": "month"
+	}
+}

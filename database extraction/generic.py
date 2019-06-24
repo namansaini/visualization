@@ -2,9 +2,11 @@ import pymongo
 import datetime
 import os, json
 import sys
+import calendar
 
-path_to_json = 'json/jsonforquizz/'
-json_files = [pos_json for pos_json in os.listdir(path_to_json) if pos_json.endswith("quiz_played_per_user.json")]
+#path_to_json = sys.argv[1]
+path_to_json = 'json/monthly/'
+json_files = [pos_json for pos_json in os.listdir(path_to_json) if pos_json.endswith(".json")]
 
 i = 1
 for file_name in json_files:
@@ -35,8 +37,13 @@ for file_name in json_files:
 		
 		today = datetime.date.today()
 		
-		start_date = (today - datetime.timedelta (days = data['startDate'])) if 'startDate' in data else today
-		end_date = (today - datetime.timedelta (days = data['endDate'])) if 'endDate' in data else today
+		if 'jobExecution' in data and data['jobExecution'] == 'monthly':
+			start_date = today.replace(day = 1).replace(month = today.month-2)
+			days_count = calendar.monthrange(today.year, today.month-2)[1]-1
+			end_date = start_date + datetime.timedelta(days = days_count)
+		else:	
+			start_date = (today - datetime.timedelta (days = data['startDate'])) if 'startDate' in data else today
+			end_date = (today - datetime.timedelta (days = data['endDate'])) if 'endDate' in data else today
 		#print(start_date)
 		#exit(0)
 		

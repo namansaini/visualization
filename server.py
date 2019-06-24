@@ -9,6 +9,7 @@ import flask
 from flask import request, jsonify
 from bson.json_util import dumps
 from flask_cors import CORS
+from operator import itemgetter
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -16,17 +17,20 @@ connection=pymongo.MongoClient('localhost',27017)
 CORS(app)
 
 #1
-@app.route('/report/school_data', methods=['GET'])
-def school_data():
+@app.route('/report/school_range', methods=['GET'])
+def school_range():
     query_parameters = request.args
-    startDt=query_parameters.get('startDt')
-    endDt=query_parameters.get('endDt')
+    startMonth=query_parameters.get('startMonth')
+    endMonth=query_parameters.get('endMonth')
     
-    if not (startDt or endDt):
+    if not (startMonth or endMonth):
         return "<h1>One or More Arguments not Specified</h1>"
     database=connection['dest_prod_log']
-    collection=database['dest_prod_log']
-    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    collection=database['school_range']
+    data=list(collection.find({"month":{"$gte":startMonth,"$lte":endMonth}},{"_id":0,"createdate":0}))
+    data=sorted(data, key=itemgetter('type'))
+    return dumps(data)
+
 #2   
 @app.route('/report/school_strength', methods=['GET'])
 def school_strength():

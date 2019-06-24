@@ -1,0 +1,37 @@
+{
+	"jobName": "daily_time_spent_user_quiz",
+	"source": {
+		"dbType": "mongodb",
+		"host": "localhost",
+		"port": "27017",
+		"dbName": "quiz_data",
+		"collection": "asessement_level_data"
+	},
+	"destination": {
+		"dbType": "mongodb",
+		"host": "localhost",
+		"port": "27017",
+		"dbName": "quiz_report_data",
+		"collection": "daily_time_spent_user_quiz"
+	},
+	"runTimeArguments": [
+	],
+	"startDate": 64,
+	"endDate": 63,
+	"query": [
+        {
+			"$match":{
+				"createdOn":{ "$gte": "startDate", "$lte": "endDate"	},
+				"uuid":{"$nin": [null, ""]}
+			}
+		},
+		{
+			"$group": {
+				"_id": {"uuid":"$uuid", "className":"$className","sujectName":"$subjectName"},"timeTaken":{"$sum":{ "$toInt":"$timeTaken" }}
+            }
+		},
+	],
+	"additionalOutput": {
+		"lastDate": "date"
+	}
+}
