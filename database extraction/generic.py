@@ -5,8 +5,8 @@ import sys
 import calendar
 
 #path_to_json = sys.argv[1]
-path_to_json = 'json/monthly/'
-json_files = [pos_json for pos_json in os.listdir(path_to_json) if pos_json.endswith(".json")]
+path_to_json = 'json/daily/'
+json_files = [pos_json for pos_json in os.listdir(path_to_json) if pos_json.endswith("daily_quiz_class_subject.json")]
 
 i = 1
 for file_name in json_files:

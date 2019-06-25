@@ -28,11 +28,7 @@
 			"$group": {
 				"_id": {"className":"$className","subjectName":"$subjectName"}, "count": {"$sum": 1}
 			}
-		},
-		{
-			"$project": {
-				"className":1,"subjectName":1,"count":1}
-			}
+		}
 	],
 	"additionalOutput": {
 		"lastDate": "date"

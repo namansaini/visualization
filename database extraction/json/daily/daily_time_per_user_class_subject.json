@@ -1,5 +1,5 @@
 {
-	"jobName": "daily_time_spent_user_quiz",
+	"jobName": "daily_time_per_user_class_subject",
 	"source": {
 		"dbType": "mongodb",
 		"host": "localhost",
@@ -12,7 +12,7 @@
 		"host": "localhost",
 		"port": "27017",
 		"dbName": "quiz_report_data",
-		"collection": "daily_time_spent_user_quiz"
+		"collection": "daily_time_per_user_class_subject"
 	},
 	"runTimeArguments": [
 	],

@@ -270,11 +270,51 @@ $(document).ready(function(){
                 }
                 else if(query=="daily_time_spent_user_quiz")
                 {
+                    $("#title").css('display','block');
+                    $("#title").html('Time Spent per User');
+                    var data = new google.visualization.DataTable();
+                    var responseJson = [];
+                    data.addColumn('string','User Id')
+                    data.addColumn('number','Time');
+                    //responseJson.push(heading);
+                    for(var item,i=0;item=jsonObj[i++];)
+                    {
+                        var temp=[item.uuid];
+                        temp.push(item.timeTaken);
 
+                        responseJson.push(temp);
+                    }
+                    console.log(responseJson);
+                    data.addRows(responseJson);
+                    
+                    var table = new google.visualization.Table(document.getElementById("chart_div"));
+                    table.draw(data, {showRowNumber: false, width: '100%', height: '100%'});
                 }
                 else if(query=="daily_time_per_user_class_subject")
                 {
+                    $("#title").css('display','block');
+                    $("#title").html('Time Spent per User(on the basis of class and subject)');
+                    var data = new google.visualization.DataTable();
+                    var responseJson = [];
+                    data.addColumn('string','User Id')
+                    data.addColumn('string','Class Name')
+                    data.addColumn('string','Subject Name')
+                    data.addColumn('number','Time');
+                    //responseJson.push(heading);
+                    for(var item,i=0;item=jsonObj[i++];)
+                    {
+                        var temp=[item.uuid];
+                        temp.push(item.className);
+                        temp.push(item.subjectName);
+                        temp.push(item.timeTaken);
 
+                        responseJson.push(temp);
+                    }
+                    console.log(responseJson);
+                    data.addRows(responseJson);
+                    
+                    var table = new google.visualization.Table(document.getElementById("chart_div"));
+                    table.draw(data, {showRowNumber: false, width: '100%', height: '100%'});
                 }
 
             }
@@ -313,43 +353,52 @@ $( "#school_strength" ).click(function() {
 
     query="school_strength";
     $("#date").css('display','block');
+    $("#month").css('display','none');
 });
 $( "#user_info" ).click(function() {
     query="user_info";
     $("#date").css('display','block');
+    $("#month").css('display','none');
 });
 $( "#daily_quiz_class_subject" ).click(function() {
     query="daily_quiz_class_subject";
     $("#date").css('display','block');
+    $("#month").css('display','none');
 });
 $( "#daily_quiz_count" ).click(function() {
     query="daily_quiz_count";
     $("#date").css('display','block');
+    $("#month").css('display','none');
 });
 
 $( "#daily_user_class_subject" ).click(function() {
     query="daily_user_class_subject";
     $("#date").css('display','block');
+    $("#month").css('display','none');
 });
 
 $( "#daily_users_count_quiz" ).click(function() {
     query="daily_users_count_quiz";
     $("#date").css('display','block');
+    $("#month").css('display','none');
 });
 
 $( "#quiz_played_per_user" ).click(function() {
     query="quiz_played_per_user";
     $("#date").css('display','block');
+    $("#month").css('display','none');
 });
 
 $( "#daily_time_spent_user_quiz" ).click(function() {
     query="daily_time_spent_user_quiz";
     $("#date").css('display','block');
+    $("#month").css('display','none');
 });
 
 $( "#daily_time_per_user_class_subject" ).click(function() {
     query="daily_time_per_user_class_subject";
     $("#date").css('display','block');
+    $("#month").css('display','none');
 });
 
 })
