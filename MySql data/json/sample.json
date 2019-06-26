@@ -1,0 +1,24 @@
+{
+	"jobName": "daily_quiz_class_subject",
+	"source": {
+		"dbType": "mysql",
+		"host": "localhost",
+		"port": "3306",
+		"dbName": "doubtdatabase"
+	},
+	"destination": {
+		"dbType": "mongodb",
+		"host": "localhost",
+		"port": "27017",
+		"dbName": "doubtdatabase",
+		"collection": "daily_quiz_class_subject"
+	},
+	"runTimeArguments": [
+	],
+	"startDate": 1,
+	"endDate": 1,
+	"query": "SELECT * FROM messages",
+	"additionalOutput": {
+		"lastDate": "date"
+	}
+}

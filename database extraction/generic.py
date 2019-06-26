@@ -10,30 +10,13 @@ json_files = [pos_json for pos_json in os.listdir(path_to_json) if pos_json.ends
 
 i = 1
 for file_name in json_files:
-	#print file_name
 	with open(path_to_json+file_name) as json_file:
 		data = json.load(json_file)
-		#print data['jobName']
-
-#exit(0)
-
-#with open('job_info.json') as json_file:  
-#	main_data = json.load(json_file)
-	#print(main_data)
-#	i = 1
-#	for data in main_data['jobs']:
+		
 		print ('')
 		print('-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-'+data['jobName']+'-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-')
 		print ('')
 		print(str(i) +'. New Job Started : '+data['jobName'])
-		#print('source >> dbUrl: '+data['source']['dbType']+'://' + data['source']['host']+':'+data['source']['port']+'/')
-		#print('source >> dbName: ' + data['source']['dbName'])
-		#print('source >> collection: ' + data['source']['collection'])
-		#print('destination >> dbUrl: '+data['destination']['dbType']+'://' + data['destination']['host']+':'+data['destination']['port']+'/')
-		#print('destination >> dbName: ' + data['destination']['dbName'])
-		#print('destination >> collection: ' + data['destination']['collection'])
-		#for arg in data['runTimeArguments']:
-		#	print('runTimeArguments : ' + arg)
 		
 		today = datetime.date.today()
 		
@@ -44,8 +27,6 @@ for file_name in json_files:
 		else:	
 			start_date = (today - datetime.timedelta (days = data['startDate'])) if 'startDate' in data else today
 			end_date = (today - datetime.timedelta (days = data['endDate'])) if 'endDate' in data else today
-		#print(start_date)
-		#exit(0)
 		
 		if data['source']['dbType'] == 'mongodb':
 			sourceClient = pymongo.MongoClient( data['source']['dbType']+'://' + data['source']['host']+':'+data['source']['port']+'/' )
@@ -130,10 +111,12 @@ for file_name in json_files:
 					#continue
 					destCol.insert_one(dict)
 					dict.clear()
-		
-		print('Job Ended : '+data['jobName'])
+                
+                sourceClient.close();
+                destClient.close();
+            
+    		print('Job Ended : '+data['jobName'])
 		#exit(0)
-		destClient.close();
-		sourceClient.close();	
+    		
 	i += 1;
     
