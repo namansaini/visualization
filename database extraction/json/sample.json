@@ -17,7 +17,7 @@
 	],
 	"startDate": 4,
 	"endDate": 3,
-	"query": "SELECT id, type, message_text FROM messages WHERE created BETWEEN ",
+	"query": "SELECT id, type, message_text FROM messages WHERE created BETWEEN 'startDate' AND 'endDate';",
 	"additionalOutput": {
 		"lastDate": "date"
 	},

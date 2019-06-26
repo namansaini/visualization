@@ -105,8 +105,9 @@ for file_name in json_files:
             destClient=pymongo.MongoClient(data['destination']['dbType']+'://' + data['destination']['host']+':'+data['destination']['port']+'/' )
             destDb=destClient[ data['destination']['dbName'] ]
             destCol = destDb[ data['destination']['collection'] ]
-    
-            finalQuery=data['query'] + "'" + startDate + "' AND '" + endDate + "';"
+            
+            temp = data['query'].replace("startDate",startDate)
+            finalQuery = temp.replace("endDate",endDate)
             print(finalQuery)
             sourceCursor.execute(finalQuery)
             

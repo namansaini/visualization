@@ -349,6 +349,7 @@ $("#btn2").click(function()
 $( "#school_range" ).click(function() {
     query="school_range";
     $("#month").css('display','block');
+    $("#date").css('display','none');
     $('#title').css('display','none');
 });
 $( "#school_strength" ).click(function() {
@@ -356,6 +357,7 @@ $( "#school_strength" ).click(function() {
     query="school_strength";
     $("#date").css('display','block');
     $("#month").css('display','none');
+    $(this).css("background-color","yellow" );
 });
 $( "#user_info" ).click(function() {
     query="user_info";
