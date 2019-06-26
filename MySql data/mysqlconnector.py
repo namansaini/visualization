@@ -2,7 +2,6 @@ import MySQLdb
 import datetime
 import os, json
 import calendar
-from bson.json_util import dumps
 import pymongo
 #path_to_json = sys.argv[1]
 path_to_json = 'json/'
@@ -28,7 +27,7 @@ for file_name in json_files:
             end_date = (today - datetime.timedelta (days = data['endDate'])) if 'endDate' in data else today
             
         if data['source']['dbType'] == 'mysql':
-            sourceDb=MySQLdb.connect(data['source']['host'],"root","abc54312",data['source']['dbName'])
+            sourceDb=MySQLdb.connect(data['source']['host'],"root","system",data['source']['dbName'])
             sourceCursor=sourceDb.cursor()
             
             destClient=pymongo.MongoClient(data['destination']['dbType']+'://' + data['destination']['host']+':'+data['destination']['port']+'/' )
@@ -40,7 +39,16 @@ for file_name in json_files:
             rv = sourceCursor.fetchall()
             json_data=[]
             for result in rv:
-                json_data.append(dict(zip(row_headers,result)))
+                d=dict(zip(row_headers,result))
+                
+                d['createdate'] = datetime.datetime.today()
+                for key, value in data['additionalOutput'].items():
+                    if key == 'lastDate':
+                        d[value] = end_date.strftime("%Y-%m-%d")
+                    if key == 'currentMonth':
+                        d[value] = end_date.strftime("%Y-%m")
+                json_data.append(d)
+            
             destCol.insert_many(json_data)
                 
             

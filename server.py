@@ -6,7 +6,7 @@ Created on Tue Jun 18 11:29:18 2019
 """
 import pymongo
 import flask
-from flask import request, jsonify
+from flask import request
 from bson.json_util import dumps
 from flask_cors import CORS
 from operator import itemgetter
@@ -120,6 +120,33 @@ def quiz_played_per_user():
     database=connection['quiz_report_data']
     collection=database['quiz_played_per_user']
     return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+
+#9
+@app.route('/report/daily_time_spent_user_quiz', methods=['GET'])
+def daily_time_spent_user_quiz():
+    query_parameters = request.args
+    startDt=query_parameters.get('startDt')
+    endDt=query_parameters.get('endDt')
+    
+    if not (startDt or endDt):
+        return "<h1>One or More Arguments not Specified</h1>"
+    database=connection['quiz_report_data']
+    collection=database['daily_time_spent_user_quiz']
+    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+
+#10
+@app.route('/report/daily_time_per_user_class_subject', methods=['GET'])
+def daily_time_per_user_class_subject():
+    query_parameters = request.args
+    startDt=query_parameters.get('startDt')
+    endDt=query_parameters.get('endDt')
+    
+    if not (startDt or endDt):
+        return "<h1>One or More Arguments not Specified</h1>"
+    database=connection['quiz_report_data']
+    collection=database['daily_time_per_user_class_subject']
+    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+
 @app.errorhandler(404)
 def page_not_found(e):
     return "<h1>404</h1><p>The resource could not be found.</p>", 404

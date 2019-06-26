@@ -1,24 +1,25 @@
 {
-	"jobName": "doubt",
+	"jobName": "sample",
 	"source": {
 		"dbType": "mysql",
 		"host": "localhost",
 		"port": "3306",
-		"dbName": "doubtdatabase"
+		"dbName": "testdb"
 	},
 	"destination": {
 		"dbType": "mongodb",
 		"host": "localhost",
 		"port": "27017",
 		"dbName": "doubtdatabase",
-		"collection": "doubt"
+		"collection": "sample"
 	},
 	"runTimeArguments": [
 	],
-	"startDate": 1,
-	"endDate": 1,
-	"query": "SELECT * FROM messages",
+	"startDate": 4,
+	"endDate": 3,
+	"query": "SELECT id, type, message_text FROM messages WHERE created BETWEEN ",
 	"additionalOutput": {
 		"lastDate": "date"
-	}
+	},
+    "dateAsString":true
 }

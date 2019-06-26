@@ -332,6 +332,7 @@ $("#btn").click(function()
     endDt=$("#endDt").val();
     $("#chart_div").css('display','block');
 
+
     google.charts.setOnLoadCallback(drawChart);
 })
 
@@ -348,6 +349,7 @@ $("#btn2").click(function()
 $( "#school_range" ).click(function() {
     query="school_range";
     $("#month").css('display','block');
+    $('#title').css('display','none');
 });
 $( "#school_strength" ).click(function() {
 
@@ -369,6 +371,7 @@ $( "#daily_quiz_count" ).click(function() {
     query="daily_quiz_count";
     $("#date").css('display','block');
     $("#month").css('display','none');
+    $('#title').css('display','none');
 });
 
 $( "#daily_user_class_subject" ).click(function() {
