@@ -81,6 +81,11 @@ $(document).ready(function(){
                     
                     var chart = new google.charts.Bar(document.getElementById("chart_div"));
                     chart.draw(data, google.charts.Bar.convertOptions(options));
+                    google.visualization.events.addListener(table, 'ready', selectHandler);
+
+                    function selectHandler(){
+                        $("#design").css('display','none');
+                    }
                 }
                 else
                 if(query=="school_strength")
@@ -91,11 +96,13 @@ $(document).ready(function(){
                     var responseJson = [];
                     
                     data.addColumn('string','School');
+                    data.addColumn('string','Date')
                     data.addColumn('number','Count');
                     //responseJson.push(heading);
                     for(var item,i=0;item=jsonObj[i++];)
                     {
                         var temp=[item.school_name];
+                        temp.push(item.date);
                         temp.push(item.count);
                         responseJson.push(temp);
                     }
@@ -104,6 +111,11 @@ $(document).ready(function(){
                     
                     var table = new google.visualization.Table(document.getElementById("chart_div"));
                     table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+                    google.visualization.events.addListener(table, 'ready', selectHandler);
+
+                    function selectHandler(){
+                        $("#design").css('display','none');
+                    }
                 }
                 else
                 if(query=="user_info")
@@ -118,7 +130,9 @@ $(document).ready(function(){
                     data.addColumn('string','School Name')
                     data.addColumn('string','Class Name')
                     data.addColumn('number', 'Time Spent')
+                    
                     data.addColumn('number','Count');
+                    data.addColumn('string','Date')
                     //responseJson.push(heading);
                     for(var item,i=0;item=jsonObj[i++];)
                     {
@@ -126,15 +140,22 @@ $(document).ready(function(){
                         temp.push(item.role_name);
                         temp.push(item.school_name);
                         temp.push(item.class_name);
-                        temp.push(item.count);
                         temp.push(item.time_spent);
+                        temp.push(item.count);
+                        temp.push(item.date);
                         responseJson.push(temp);
                     }
                     console.log(responseJson);
                     data.addRows(responseJson);
                     
                     var table = new google.visualization.Table(document.getElementById("chart_div"));
-                    table.draw(data, {showRowNumber: false, width: '100%', height: '100%'});
+
+                    table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+                    google.visualization.events.addListener(table, 'ready', selectHandler);
+
+                    function selectHandler(){
+                        $("#design").css('display','none');
+                    }
                 }
                 else if(query=="daily_quiz_class_subject")
                 {
@@ -142,22 +163,29 @@ $(document).ready(function(){
                     $("#title").html('No. of quizzes (on the basis of class and subject)');
                     var data = new google.visualization.DataTable();
                     var responseJson = [];
-                    data.addColumn('string','Class Name')
-                    data.addColumn('string','Subject Name')
+                    data.addColumn('string','Class Name');
+                    data.addColumn('string','Subject Name');
                     data.addColumn('number','Count');
+                    data.addColumn('string','Date');
                     //responseJson.push(heading);
                     for(var item,i=0;item=jsonObj[i++];)
                     {
                         var temp=[item.className];
                         temp.push(item.subjectName);
                         temp.push(item.count);
+                        temp.push(item.date);
                         responseJson.push(temp);
                     }
                     console.log(responseJson);
                     data.addRows(responseJson);
                     
                     var table = new google.visualization.Table(document.getElementById("chart_div"));
-                    table.draw(data, {showRowNumber: false, width: '100%', height: '100%'});
+                    table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+                    google.visualization.events.addListener(table, 'ready', selectHandler);
+
+                    function selectHandler(){
+                        $("#design").css('display','none');
+                    }
                 }
                 else if(query=="daily_quiz_count")
                 {
@@ -187,6 +215,11 @@ $(document).ready(function(){
                     
                     var chart = new google.charts.Bar(document.getElementById("chart_div"));
                     chart.draw(data, google.charts.Bar.convertOptions(options));
+                    google.visualization.events.addListener(table, 'ready', selectHandler);
+
+                    function selectHandler(){
+                        $("#design").css('display','none');
+                    }
                 }
                 else if(query=="daily_user_class_subject")
                 {
@@ -197,19 +230,26 @@ $(document).ready(function(){
                     data.addColumn('string','Class Name')
                     data.addColumn('string','Subject Name')
                     data.addColumn('number','Count');
+                    data.addColumn('string','Date');
                     //responseJson.push(heading);
                     for(var item,i=0;item=jsonObj[i++];)
                     {
                         var temp=[item.className];
                         temp.push(item.subjectName);
                         temp.push(item.count);
+                        temp.push(item.date);
                         responseJson.push(temp);
                     }
                     console.log(responseJson);
                     data.addRows(responseJson);
                     
                     var table = new google.visualization.Table(document.getElementById("chart_div"));
-                    table.draw(data, {showRowNumber: false, width: '100%', height: '100%'});
+                    table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+                    google.visualization.events.addListener(table, 'ready', selectHandler);
+
+                    function selectHandler(){
+                        $("#design").css('display','none');
+                    }
                 }
                 else if(query=="daily_users_count_quiz")
                 {
@@ -239,6 +279,11 @@ $(document).ready(function(){
                     
                     var chart = new google.charts.Bar(document.getElementById("chart_div"));
                     chart.draw(data, google.charts.Bar.convertOptions(options));
+                    google.visualization.events.addListener(table, 'ready', selectHandler);
+
+                    function selectHandler(){
+                        $("#design").css('display','none');
+                    }
                 }
                 else if(query=="quiz_played_per_user")
                 {
@@ -251,6 +296,7 @@ $(document).ready(function(){
                     data.addColumn('string','Class Name')
                     data.addColumn('string','Subject Name')
                     data.addColumn('number','Quiz Count');
+                    data.addColumn('string','Date');
                     //responseJson.push(heading);
                     for(var item,i=0;item=jsonObj[i++];)
                     {
@@ -259,14 +305,19 @@ $(document).ready(function(){
                         temp.push(item.className);
                         temp.push(item.subjectName);
                         temp.push(item.quiz_count);
-
+                        temp.push(item.date);
                         responseJson.push(temp);
                     }
                     console.log(responseJson);
                     data.addRows(responseJson);
                     
                     var table = new google.visualization.Table(document.getElementById("chart_div"));
-                    table.draw(data, {showRowNumber: false, width: '100%', height: '100%'});
+                    table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+                    google.visualization.events.addListener(table, 'ready', selectHandler);
+
+                    function selectHandler(){
+                        $("#design").css('display','none');
+                    }
                 }
                 else if(query=="daily_time_spent_user_quiz")
                 {
@@ -276,19 +327,25 @@ $(document).ready(function(){
                     var responseJson = [];
                     data.addColumn('string','User Id')
                     data.addColumn('number','Time');
+                    data.addColumn('string','Date');
                     //responseJson.push(heading);
                     for(var item,i=0;item=jsonObj[i++];)
                     {
                         var temp=[item.uuid];
                         temp.push(item.timeTaken);
-
+                        temp.push(item.date);
                         responseJson.push(temp);
                     }
                     console.log(responseJson);
                     data.addRows(responseJson);
                     
                     var table = new google.visualization.Table(document.getElementById("chart_div"));
-                    table.draw(data, {showRowNumber: false, width: '100%', height: '100%'});
+                    table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+                    google.visualization.events.addListener(table, 'ready', selectHandler);
+
+                    function selectHandler(){
+                        $("#design").css('display','none');
+                    }
                 }
                 else if(query=="daily_time_per_user_class_subject")
                 {
@@ -300,6 +357,7 @@ $(document).ready(function(){
                     data.addColumn('string','Class Name')
                     data.addColumn('string','Subject Name')
                     data.addColumn('number','Time');
+                    data.addColumn('string','Date');
                     //responseJson.push(heading);
                     for(var item,i=0;item=jsonObj[i++];)
                     {
@@ -307,14 +365,19 @@ $(document).ready(function(){
                         temp.push(item.className);
                         temp.push(item.subjectName);
                         temp.push(item.timeTaken);
-
+                        temp.push(item.date);
                         responseJson.push(temp);
                     }
                     console.log(responseJson);
                     data.addRows(responseJson);
                     
                     var table = new google.visualization.Table(document.getElementById("chart_div"));
-                    table.draw(data, {showRowNumber: false, width: '100%', height: '100%'});
+                    table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+                    google.visualization.events.addListener(table, 'ready', selectHandler);
+
+                    function selectHandler(){
+                        $("#design").css('display','none');
+                    }
                 }
 
             }
@@ -407,7 +470,3 @@ $( "#daily_time_per_user_class_subject" ).click(function() {
 });
 
 })
-
-
-
-
