@@ -1,6 +1,8 @@
 {
 	"jobName": "sample",
 	"source": {
+		"username":"root",
+		"password":"abc54312",
 		"dbType": "mysql",
 		"host": "localhost",
 		"port": "3306",

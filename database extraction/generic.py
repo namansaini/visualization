@@ -96,10 +96,10 @@ for file_name in json_files:
                     destCol.insert_one(dict)
                     dict.clear()
                     sourceClient.close()
-                    destClient.close()
+                    
                     
         elif data['source']['dbType'] == 'mysql':
-            sourceDb=MySQLdb.connect(data['source']['host'],"root","system",data['source']['dbName'])
+            sourceDb=MySQLdb.connect(data['source']['host'],data['source']['username'],data['source']['password'],data['source']['dbName'])
             sourceCursor=sourceDb.cursor()
             
             destClient=pymongo.MongoClient(data['destination']['dbType']+'://' + data['destination']['host']+':'+data['destination']['port']+'/' )
@@ -108,7 +108,6 @@ for file_name in json_files:
             
             temp = data['query'].replace("startDate",startDate)
             finalQuery = temp.replace("endDate",endDate)
-            print(finalQuery)
             sourceCursor.execute(finalQuery)
             
             row_headers=[x[0] for x in sourceCursor.description] #this will extract row headers
@@ -126,7 +125,9 @@ for file_name in json_files:
                 json_data.append(d)
             print(json_data)
             destCol.insert_many(json_data)
-
-        
+            sourceCursor.close()
+            sourceDb.close()
+            
+        destClient.close()
 print('Job Ended : '+data['jobName'])		
 i += 1

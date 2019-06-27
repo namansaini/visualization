@@ -23,7 +23,7 @@ def school_range():
     endMonth=query_parameters.get('endMonth')
     
     if not (startMonth or endMonth):
-        return "<h1>One or More Arguments not Specified</h1>"
+        return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['dest_prod_log']
     collection=database['school_range']
     data=list(collection.find({"month":{"$gte":startMonth,"$lte":endMonth}},{"_id":0,"createdate":0}))
@@ -38,7 +38,7 @@ def school_strength():
     endDt=query_parameters.get('endDt')
     
     if not (startDt or endDt):
-        return "<h1>One or More Arguments not Specified</h1>"
+        return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['dest_prod_log']
     collection=database['school_strength']
     return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
@@ -50,7 +50,7 @@ def user_info():
     endDt=query_parameters.get('endDt')
     
     if not (startDt or endDt):
-        return "<h1>One or More Arguments not Specified</h1>"
+        return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['dest_prod_log']
     collection=database['user_info']
     return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
@@ -62,7 +62,7 @@ def daily_quiz_class_subject():
     endDt=query_parameters.get('endDt')
     
     if not (startDt or endDt):
-        return "<h1>One or More Arguments not Specified</h1>"
+        return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['quiz_report_data']
     collection=database['daily_quiz_class_subject']
     return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
@@ -74,7 +74,7 @@ def daily_quiz_count():
     endDt=query_parameters.get('endDt')
     
     if not (startDt or endDt):
-        return "<h1>One or More Arguments not Specified</h1>"
+        return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['quiz_report_data']
     collection=database['daily_quiz_count']
     return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
@@ -89,7 +89,7 @@ def daily_user_class_subject():
     endDt=query_parameters.get('endDt')
     
     if not (startDt or endDt):
-        return "<h1>One or More Arguments not Specified</h1>"
+        return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['quiz_report_data']
     collection=database['daily_user_class_subject']
     return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
@@ -102,7 +102,7 @@ def daily_users_count_quiz():
     endDt=query_parameters.get('endDt')
     
     if not (startDt or endDt):
-        return "<h1>One or More Arguments not Specified</h1>"
+        return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['quiz_report_data']
     collection=database['daily_users_count_quiz']
     return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
@@ -115,7 +115,7 @@ def quiz_played_per_user():
     endDt=query_parameters.get('endDt')
     
     if not (startDt or endDt):
-        return "<h1>One or More Arguments not Specified</h1>"
+        return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['quiz_report_data']
     collection=database['quiz_played_per_user']
     return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
@@ -128,7 +128,7 @@ def daily_time_spent_user_quiz():
     endDt=query_parameters.get('endDt')
     
     if not (startDt or endDt):
-        return "<h1>One or More Arguments not Specified</h1>"
+        return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['quiz_report_data']
     collection=database['daily_time_spent_user_quiz']
     return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
@@ -141,7 +141,7 @@ def daily_time_per_user_class_subject():
     endDt=query_parameters.get('endDt')
     
     if not (startDt or endDt):
-        return "<h1>One or More Arguments not Specified</h1>"
+        return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['quiz_report_data']
     collection=database['daily_time_per_user_class_subject']
     return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))

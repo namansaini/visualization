@@ -27,7 +27,7 @@
 		},
 		{
 			"$group": {
-				"_id": {"uuid":"$uuid", "className":"$className","sujectName":"$subjectName"},"timeTaken":{"$sum":{ "$toInt":"$timeTaken" }}
+				"_id": {"uuid":"$uuid", "className":"$className","subjectName":"$subjectName"},"timeTaken":{"$sum":{ "$toInt":"$timeTaken" }}
             }
 		},
 	],
