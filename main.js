@@ -16,13 +16,14 @@ $(document).ready(function(){
 			endMonth = $("#endMonth").val();
 		}
 		$("#design").css('display','block');
-		$('#title').css('display','none');
+		$('#title, #alert').css('display','none');
 		google.charts.setOnLoadCallback(drawChart);
 		$("a").removeClass("active");
 		$("#"+query).addClass("active");
+		
 	})
 	
-	$( "#school_range, #school_strength, #user_info, #daily_quiz_class_subject, #daily_quiz_count, #daily_user_class_subject, #daily_users_count_quiz, #quiz_played_per_user, #daily_time_spent_user_quiz, #daily_time_per_user_class_subject" ).click(function() {
+	$( "#school_range, #school_strength, #user_info, #daily_quiz_class_subject, #daily_quiz_count, #daily_user_class_subject, #daily_users_count_quiz, #quiz_played_per_user, #daily_time_spent_user_quiz, #daily_time_per_user_class_subject, #doubt_forum_counts" ).click(function() {
 		query = this.id;
 		$("a").removeClass("active");
 		$("#"+this.id).addClass("active");
@@ -40,12 +41,12 @@ $(document).ready(function(){
 
 var jsonObj;
 function drawChart(){
-	var link = `http://quizreport.fliplearn.com:8081/report/${query}?startDt=${startDt}&endDt=${endDt}`;
+	var link = `http://localhost:8081/report/${query}?startDt=${startDt}&endDt=${endDt}`;
 	if(query == "school_range")
-		link = `http://quizreport.fliplearn.com:8081/report/${query}?startMonth=${startMonth}&endMonth=${endMonth}`;
+		link = `http://localhost:8081/report/${query}?startMonth=${startMonth}&endMonth=${endMonth}`;
     console.log(link);
     $.ajax({
-		url: link,//"http://quizreport.fliplearn.com:8081/report/school_range?startMonth=2019-04&endMonth=2019-06",
+		url: link,//"http://localhost:8081/report/school_range?startMonth=2019-04&endMonth=2019-06",
 		success:function(jsonData){
 			console.log(jsonData);
             jsonObj = JSON.parse(jsonData);
@@ -120,7 +121,7 @@ function drawChart(){
 					} 
 					else if(query == 'user_info'){
 						data.addColumn('string', 'UUID');		data.addColumn('string', 'Role Name');	data.addColumn('string', 'School Name');
-						data.addColumn('string', 'Class Name');	data.addColumn('number', 'Time Spent');	data.addColumn('number', 'Count');
+						data.addColumn('string', 'Class Name');	data.addColumn('number', 'Time Spent (in minutes)');	data.addColumn('number', 'Count');
 					} 
 					else if(query == 'daily_quiz_class_subject'){
 						data.addColumn('string', 'Class Name');	data.addColumn('string', 'Subject Name');	data.addColumn('number', 'Count');
@@ -133,11 +134,11 @@ function drawChart(){
 						data.addColumn('string','Subject Name');data.addColumn('number','Quiz Count');
 					}
 					else if(query == 'daily_time_spent_user_quiz'){
-						data.addColumn('string','User Id');		data.addColumn('number','Time');
+						data.addColumn('string','User Id');		data.addColumn('number','Time (in minutes)');
 					}
 					else if(query == 'daily_time_per_user_class_subject'){
 						data.addColumn('string','User Id');		data.addColumn('string','Class Name');
-						data.addColumn('string','Subject Name');data.addColumn('number','Time');
+						data.addColumn('string','Subject Name');data.addColumn('number','Time (in minutes)');
 					}
 					data.addColumn('string', 'Date');
 					
@@ -147,7 +148,7 @@ function drawChart(){
 							temp = [item.school_name, item.count];
 						}
 						else if(query == 'user_info'){
-							temp = [item.UUID, item.role_name, item.school_name, item.class_name, item.time_spent, item.count];
+							temp = [item.UUID, item.role_name, item.school_name, item.class_name, item.time_spent/60000, item.count];
 						}
 						else if(query == 'daily_quiz_class_subject'){
 							temp = [item.className, item.subjectName, item.count];
@@ -159,10 +160,10 @@ function drawChart(){
 							temp = [item.user, item.userName, item.className, item.subjectName, item.quiz_count];
                         }
 						else if(query == 'daily_time_spent_user_quiz'){
-							temp = [item.uuid, item.timeTaken];
+							temp = [item.uuid, item.timeTaken/60000];
                         }
 						else if(query == 'daily_time_per_user_class_subject'){
-							temp = [item.uuid, item.className, item.subjectName, item.timeTaken];
+							temp = [item.uuid, item.className, item.subjectName, item.timeTaken/60000];
                         }
 						temp.push(item.date);
                         responseJson.push(temp);
@@ -172,31 +173,55 @@ function drawChart(){
                     
                     var table = new google.visualization.Table(document.getElementById("chart_div"));
                     table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
-					
+					$('.google-visualization-table-table').addClass('display')
+					$('.google-visualization-table-table').addClass('nowrap')
+					$('.google-visualization-table-table').dataTable({dom: 'lBfrtip',buttons: ['copy', 'csv', 'excel', 'pdf', 'print']});
 					break;
 				
 				case "daily_quiz_count":
 				case "daily_users_count_quiz":
+				case "doubt_forum_counts":
 					$("#chart_div").css('display','block');
+					
 					var responseJson = [];
-                    var heading = [];
-					heading.push('Date');
-                    heading.push('Count');
+					var heading = [];
+					if(query=="daily_quiz_count" || query=="daily_users_count_quiz")
+					{
+						heading.push('Date');
+						heading.push('Count');
+					}
+					else
+					if(query=="doubt_forum_counts")
+					{
+						heading.push('Date');
+						heading.push('Mesaage Count');
+						heading.push('Answers Count');
+						
+					}
 					responseJson.push(heading);
 					for(var item,i=0; item = jsonObj[i++];){
-                        var temp = [item.date, item.count];
+						if(query=="daily_quiz_count" || query=="daily_users_count_quiz")
+						{
+							var temp = [item.date, item.count];
+						}
+						else
+						if(query=="doubt_forum_counts")
+						{
+							var temp = [item.date, item.messages_count, item.answers_count];
+						}
+                        
                         responseJson.push(temp);
                     }
 					console.log(responseJson);
 					var data = google.visualization.arrayToDataTable(responseJson);
                     var options = {
-                        chart: {
-							title: $('#'+query).html()
-                        }
+							title: $('#'+query).html(),
+							curveType: 'function'
+							
                     };
                     
-                    var chart = new google.charts.Bar(document.getElementById("chart_div"));
-                    chart.draw(data, google.charts.Bar.convertOptions(options));
+					var chart = new google.visualization.LineChart(document.getElementById("chart_div"));
+                    chart.draw(data, options);
 					
 					break;
 					
@@ -204,7 +229,13 @@ function drawChart(){
 					alert("Something wrong ! query param mismatched !");
 			}
 			$("#design").css('display','none');
-		}
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown) { 
+			$('#alertMsg').html("Status: " + textStatus+", "+"Error: " + errorThrown);
+			$('#alert').css('display', 'block');
+			$("#design").css('display','none');
+		}       
+		
     })
 }
 

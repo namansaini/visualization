@@ -146,8 +146,21 @@ def daily_time_per_user_class_subject():
     collection=database['daily_time_per_user_class_subject']
     return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
 
+#11
+@app.route('/report/doubt_forum_counts', methods=['GET'])
+def doubt_forum_counts():
+    query_parameters = request.args
+    startDt=query_parameters.get('startDt')
+    endDt=query_parameters.get('endDt')
+    
+    if not (startDt or endDt):
+        return "<h1>One or More Arguments not Specified</h1>", 500
+    database=connection['data_analysis']
+    collection=database['doubt_forum_counts']
+    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+
 @app.errorhandler(404)
 def page_not_found(e):
     return "<h1>404</h1><p>The resource could not be found.</p>", 404
 
-app.run()
+app.run(port=8081)

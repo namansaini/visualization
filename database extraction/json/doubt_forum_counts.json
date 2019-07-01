@@ -1,0 +1,27 @@
+{
+	"jobName": "doubt_forum_counts",
+	"source": {
+		"username":"root",
+		"password":"abc54312",
+		"dbType": "mysql",
+		"host": "localhost",
+		"port": "3306",
+		"dbName": "doubtdatabase"
+	},
+	"destination": {
+		"dbType": "mongodb",
+		"host": "localhost",
+		"port": "27017",
+		"dbName": "doubtdatabase",
+		"collection": "doubt_forum_counts"
+	},
+	"runTimeArguments": [
+	],
+	"startDate": 10,
+	"endDate": 9,
+	"query": "SELECT (SELECT count(1) FROM school_api.messages where type = '#doubt_forum' and updated between 'startDate' and 'endDate') messages_count, (SELECT count(1) FROM school_api.message_comments mc, school_api.messages m where mc.message_group = m.message_group and m.type = '#doubt_forum' and mc.status =1 and mc.updated between 'startDate' and 'endDate') answers_count",
+	"additionalOutput": {
+		"lastDate": "date"
+	},
+    "dateAsString":true
+}

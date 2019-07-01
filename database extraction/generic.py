@@ -6,8 +6,8 @@ import MySQLdb
 import calendar
 
 #path_to_json = sys.argv[1]
-path_to_json = 'json/'
-json_files = [pos_json for pos_json in os.listdir(path_to_json) if pos_json.endswith("sample.json")]
+path_to_json = 'json/daily/'
+json_files = [pos_json for pos_json in os.listdir(path_to_json) if pos_json.endswith("doubt_forum_counts.json")]
 
 i = 1
 for file_name in json_files:
