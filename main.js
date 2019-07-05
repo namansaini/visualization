@@ -3,18 +3,32 @@ var startDt;
 var endDt;
 var startMonth;
 var endMonth;
+var week;
 $(document).ready(function(){
     google.charts.load('current', {packages: ['bar','corechart','table']});
     
-	$("#btn, #btn2").click(function(){
-		$('#chart_div').html('');
+	$("#btn, #btn2, #btn3").click(function(){
+		startDt = endDt = startMonth = endMonth = undefined;
 		if(this.id == 'btn'){
 			startDt = $("#startDt").val();
 			endDt = $("#endDt").val();
-		}else{
+		}else if(this.id == 'btn2'){
 			startMonth = $("#startMonth").val();
 			endMonth = $("#endMonth").val();
 		}
+		else if(this.id == 'btn3')
+		{
+			week= $("#week").val();
+			
+		}
+		console.log("{ "+startDt+ ", "+ endDt + ", " + startMonth + ", " + endMonth + " }");
+		if((startDt == '' || endDt == '') || (startMonth=='' || endMonth=='')){
+            alert('Choose fields before proceeeding...');
+            return false;
+        }
+		if(query=='user_info' && !confirm("The data set is humongous and hence is gonna take a lot of time to fetch.. Get a cup of tea before proceeding!!"))
+			return false;
+		$('#chart_div').html('');
 		$("#design").css('display','block');
 		$('#title, #alert').css('display','none');
 		google.charts.setOnLoadCallback(drawChart);
@@ -23,7 +37,7 @@ $(document).ready(function(){
 		
 	})
 	
-	$( "#school_range, #school_strength, #user_info, #daily_quiz_class_subject, #daily_quiz_count, #daily_user_class_subject, #daily_users_count_quiz, #quiz_played_per_user, #daily_time_spent_user_quiz, #daily_time_per_user_class_subject, #doubt_forum_counts" ).click(function() {
+	$( "a" ).click(function() {
 		query = this.id;
 		$("a").removeClass("active");
 		$("#"+this.id).addClass("active");
@@ -31,9 +45,17 @@ $(document).ready(function(){
 		if(query == 'school_range'){
 			$("#month").css('display','block');
 			$('#date').css('display','none');
+			$("#weekbox").css('display','none');
+		}
+		else if(query == 'new_returning_user')
+		{
+			$("#weekbox").css('display','block');
+			$("#date").css('display','none');
+			$("#month").css('display','none');
 		}else{
 			$("#date").css('display','block');
 			$("#month").css('display','none');
+			$("#weekbox").css('display','none');
 		}
 	});
 
@@ -41,12 +63,18 @@ $(document).ready(function(){
 
 var jsonObj;
 function drawChart(){
-	var link = `http://localhost:8081/report/${query}?startDt=${startDt}&endDt=${endDt}`;
+	var link;
 	if(query == "school_range")
-		link = `http://localhost:8081/report/${query}?startMonth=${startMonth}&endMonth=${endMonth}`;
+		link = `http://quizreport.fliplearn.com:8081/report/${query}?startMonth=${startMonth}&endMonth=${endMonth}`;
+	else
+	if(query == "new_returning_user")
+		link = `http://quizreport.fliplearn.com:8081/report/${query}?week=${week}`;
+	else
+		link = `http://quizreport.fliplearn.com:8081/report/${query}?startDt=${startDt}&endDt=${endDt}`;
+	
     console.log(link);
     $.ajax({
-		url: link,//"http://localhost:8081/report/school_range?startMonth=2019-04&endMonth=2019-06",
+		url: link,//"http://quizreport.fliplearn.com:8081/report/school_range?startMonth=2019-04&endMonth=2019-06",
 		success:function(jsonData){
 			console.log(jsonData);
             jsonObj = JSON.parse(jsonData);
@@ -181,50 +209,81 @@ function drawChart(){
 				case "daily_quiz_count":
 				case "daily_users_count_quiz":
 				case "doubt_forum_counts":
+				case "platform_wise_otp_counts":
 					$("#chart_div").css('display','block');
-					
 					var responseJson = [];
-					var heading = [];
-					if(query=="daily_quiz_count" || query=="daily_users_count_quiz")
-					{
-						heading.push('Date');
-						heading.push('Count');
-					}
-					else
-					if(query=="doubt_forum_counts")
-					{
+                    var heading = [];
+					if(query=="doubt_forum_counts"){
 						heading.push('Date');
 						heading.push('Mesaage Count');
 						heading.push('Answers Count');
-						
+					}else if(query=="platform_wise_otp_counts"){
+						heading = ['Date', 'Android', 'iOs', 'Web'];
+					}
+					else{
+						heading.push('Date');
+						heading.push('Count');
 					}
 					responseJson.push(heading);
 					for(var item,i=0; item = jsonObj[i++];){
-						if(query=="daily_quiz_count" || query=="daily_users_count_quiz")
-						{
-							var temp = [item.date, item.count];
-						}
-						else
 						if(query=="doubt_forum_counts")
-						{
 							var temp = [item.date, item.messages_count, item.answers_count];
-						}
-                        
+						else if(query=="platform_wise_otp_counts")
+							var temp = [item.date, item.androidCount, item.iosCount, item.webCount];
+						else
+							var temp = [item.date, item.count];
                         responseJson.push(temp);
                     }
 					console.log(responseJson);
 					var data = google.visualization.arrayToDataTable(responseJson);
                     var options = {
-							title: $('#'+query).html(),
-							curveType: 'function'
-							
-                    };
+                        title: $('#'+query).html()
+					};
                     
+                    //var chart = new google.charts.Bar(document.getElementById("chart_div"));
+                    //chart.draw(data, google.charts.Bar.convertOptions(options));
 					var chart = new google.visualization.LineChart(document.getElementById("chart_div"));
                     chart.draw(data, options);
 					
 					break;
-					
+
+				case "new_returning_user":
+					$("#weekly_user_tab").css('display','block');
+					$("#title").html($('#'+query).html())
+					var a=$("#new_user_table");
+					var b=$("#returning_user_table");
+
+					var aJson = $.grep( jsonObj, function( n, i ) {
+						return n.user_type==='new user';
+					});
+
+					var bJson = $.grep( jsonObj, function( n, i ) {
+						return n.user_type==='returning user';
+					});
+					a.DataTable(
+						{
+							"data":aJson,
+							"columns" : 
+							[
+								{ "data" : "User Id" },
+								{ "data" : "Login Id" },
+								{ "data" : "First Name" },
+								{ "data" : "User Type" }
+							]
+						}
+					);
+					b.DataTable(
+						{
+							"data":bJson,
+							"columns" : 
+							[
+								{ "data" : "User Id" },
+								{ "data" : "Login Id" },
+								{ "data" : "First Name" },
+								{ "data" : "User Type" }
+							]
+						}
+					);
 				default:
 					alert("Something wrong ! query param mismatched !");
 			}

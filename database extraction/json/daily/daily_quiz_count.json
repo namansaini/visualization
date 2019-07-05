@@ -16,8 +16,8 @@
 	},
 	"runTimeArguments": [
 	],
-	"startDate": 71,
-	"endDate": 70,
+	"startDate": 5,
+	"endDate": 5,
 	"query": [
 		{
 			"$match":{

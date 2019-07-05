@@ -29,7 +29,7 @@
   <h1>Data Analysis!</h1>
   <div class="row" id="list">
     <div class="col-sm-3" style="background-color:lavender;">
-		<div class="list-group" style="margin:20px 0;">
+		<div class="list-group" style="margin:20px 0; font-size: 12px;">
 			<a href="javascript:void(0)" id="school_range" class="list-group-item">Monthly School Count based on User Range</a>
 			<a href="javascript:void(0)" id="school_strength" class="list-group-item">Daily Active Users per School</a>
 			<a href="javascript:void(0)" id="user_info" class="list-group-item">Daily Active User Information</a>
@@ -40,7 +40,9 @@
 			<a href="javascript:void(0)" id="quiz_played_per_user" class="list-group-item">Daily Count of Assessments per User</a>
 			<a href="javascript:void(0)" id="daily_time_spent_user_quiz" class="list-group-item">Daily Time Spent per User in Assessments</a>
 			<a href="javascript:void(0)" id="daily_time_per_user_class_subject" class="list-group-item">Daily Time Spent per User in Assessments per Class per Subject</a>
-			<a href="javascript:void(0)" id="doubt_forum_counts" class="list-group-item">Doubt Forum Count</a>
+			<a href="javascript:void(0)" id="doubt_forum_counts" class="list-group-item">Doubt Forum Counts</a>
+			<a href="javascript:void(0)" id="platform_wise_otp_counts" class="list-group-item">Platform wise otp Counts</a>
+			<a href="javascript:void(0)" id="new_returning_user" class="list-group-item">Weekly New and Returning Users</a>
 		</div>
 	</div>
     <div class="col-sm-9" style="background-color:lavender;">
@@ -67,7 +69,22 @@
 				</div>
 				<button type="button" class="btn btn-default" id="btn">Submit</button>
 			</form>
+			<form class="form-inline" action="javascript:void(0)" id="weekbox" style="display: none;">
+				<div class="form-group">
+					<label for="week">Week: </label>
+					<input type="week" id="week">
+				</div>
+				<button type="button" class="btn btn-default" id="btn3">Submit</button>
+			</form>
 		</div>
+
+		<ul class="nav nav-tabs" id="weekly_user_tab" style="display: none">
+			<li class="active"><a data-toggle="tab" href="#new_user">New User</a></li>
+			<li><a data-toggle="tab" href="#returning_user">Returning User</a></li>
+		</ul>
+
+		
+
 		<div class="col-sm-12" style="margin-top:20px; background-color:white; padding:20px;">
 			<h4 id="title" style="display:none"></h4>
 			<div id="chart_div" style=" display: none; height:400px" ></div>
@@ -78,6 +95,15 @@
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 				<strong>Danger!</strong> <span id='alertMsg'></span>
 			</div>
+		</div>
+
+		<div class="tab-content">
+				<div id="new_user" class="tab-pane fade in active">
+					<table id="new_user_table"></table>
+				</div>
+				<div id="returning_user" class="tab-pane fade">
+					<table id="returning_user_table"></table>
+				</div>
 		</div>
 	
 	</div>

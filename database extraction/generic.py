@@ -7,7 +7,7 @@ import calendar
 
 #path_to_json = sys.argv[1]
 path_to_json = 'json/daily/'
-json_files = [pos_json for pos_json in os.listdir(path_to_json) if pos_json.endswith("doubt_forum_counts.json")]
+json_files = [pos_json for pos_json in os.listdir(path_to_json) if pos_json.endswith("daily_quiz_count.json")]
 
 i = 1
 for file_name in json_files:
@@ -32,7 +32,7 @@ for file_name in json_files:
         else:
             startDate = datetime.datetime(start_date.year, start_date.month, start_date.day, 00, 00, 00, 000)
             endDate = datetime.datetime(end_date.year, end_date.month, end_date.day, 23, 59, 59, 999)
-        
+        print(start_date,end_date)
         if data['source']['dbType'] == 'mongodb':
             sourceClient = pymongo.MongoClient( data['source']['dbType']+'://' + data['source']['host']+':'+data['source']['port']+'/' )
             sourceDB = sourceClient[ data['source']['dbName'] ]
@@ -73,28 +73,30 @@ for file_name in json_files:
                 cursor = sourceCol.aggregate(pipeline)
                 result = list(cursor)
                 for document in result:
-                    dict = {}
+                    dict1 = {}
                     for key2, value2 in document.items():
                         if key2 == '_id':
                             for key3, value3 in document['_id'].items():
                                 dict[key3] = value3
                         else:
-                            dict[key2] = value2
-                    dict['createdate'] = datetime.datetime.today()
+                            dict1[key2] = value2
+                    dict1['createdate'] = datetime.datetime.today()
                     for key4, value4 in data['additionalOutput'].items():
                         if key4 == 'lastDate':
-                            dict[value4] = end_date.strftime("%Y-%m-%d")
+                            dict1[value4] = end_date.strftime("%Y-%m-%d")
                         if key4 == 'currentMonth':
-                            dict[value4] = end_date.strftime("%Y-%m")
+                            dict1[value4] = end_date.strftime("%Y-%m")
+                        if key== 'weeekDuration':
+                            d[value]= end_date.isocalendar()[1]
                         
                     try:
-                        dict['key'] = fieldValues_key
+                        dict1['key'] = fieldValues_key
                     except NameError:
                         print ('')
 						
-                    print (dict)
+                    print (dict1)
                     destCol.insert_one(dict)
-                    dict.clear()
+                    dict1.clear()
                     sourceClient.close()
                     
                     
@@ -122,6 +124,11 @@ for file_name in json_files:
                         d[value] = end_date.strftime("%Y-%m-%d")
                     if key == 'currentMonth':
                         d[value] = end_date.strftime("%Y-%m")
+                    if key== 'lastWeek':
+                        d[value]= end_date.strftime("%y") + "-W" + end_date.strftime("%V")
+                    if key== 'weekDuration':
+                        d[value] = start_date.strftime("%d-%b-%Y") + " - " + end_date.strftime("%d-%b-%Y")
+                        
                 json_data.append(d)
             print(json_data)
             destCol.insert_many(json_data)
@@ -131,3 +138,7 @@ for file_name in json_files:
         destClient.close()
 print('Job Ended : '+data['jobName'])		
 i += 1
+
+today=datetime.date.today()
+end_date=(today - datetime.timedelta (days = 150))
+print(end_date.strftime("%Y") + "-W" + end_date.strftime("%V"))

@@ -30,7 +30,7 @@ def school_range():
     data=sorted(data, key=itemgetter('type'))
     return dumps(data)
 
-#2   
+#2
 @app.route('/report/school_strength', methods=['GET'])
 def school_strength():
     query_parameters = request.args
@@ -42,6 +42,7 @@ def school_strength():
     database=connection['dest_prod_log']
     collection=database['school_strength']
     return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+
 #3
 @app.route('/report/user_info', methods=['GET'])
 def user_info():
@@ -54,6 +55,7 @@ def user_info():
     database=connection['dest_prod_log']
     collection=database['user_info']
     return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+
 #4
 @app.route('/report/daily_quiz_class_subject', methods=['GET'])
 def daily_quiz_class_subject():
@@ -66,6 +68,7 @@ def daily_quiz_class_subject():
     database=connection['quiz_report_data']
     collection=database['daily_quiz_class_subject']
     return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+
 #5
 @app.route('/report/daily_quiz_count', methods=['GET'])
 def daily_quiz_count():
@@ -78,8 +81,6 @@ def daily_quiz_count():
     database=connection['quiz_report_data']
     collection=database['daily_quiz_count']
     return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
-
-
 
 #6  
 @app.route('/report/daily_user_class_subject', methods=['GET'])
@@ -158,6 +159,33 @@ def doubt_forum_counts():
     database=connection['data_analysis']
     collection=database['doubt_forum_counts']
     return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+
+
+#12
+@app.route('/report/platform_wise_otp_counts', methods=['GET'])
+def platform_wise_otp_counts():
+    query_parameters = request.args
+    startDt=query_parameters.get('startDt')
+    endDt=query_parameters.get('endDt')
+    
+    if not (startDt or endDt):
+        return "<h1>One or More Arguments not Specified</h1>", 500
+    database=connection['data_analysis']
+    collection=database['platform_wise_otp_counts']
+    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+
+#13
+@app.route('/report/new_returning_user', methods=['GET'])
+def new_returning_user():
+    query_parameters = request.args
+    week=query_parameters.get('startDt')
+    
+    if not (week):
+        return "<h1>One or More Arguments not Specified</h1>", 500
+    database=connection['data_analytics']
+    collection=database['new_returning_user ']
+    
+    return dumps(collection.find({"weekNumber":week},{"_id":0,"createdate":0}))
 
 @app.errorhandler(404)
 def page_not_found(e):
