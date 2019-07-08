@@ -12,22 +12,14 @@
 		"dbType": "mongodb",
 		"host": "localhost",
 		"port": "27017",
-		"dbName": "data_analytics",
+		"dbName": "data_analysis",
 		"collection": "new_returning_user"
 	},
 	"runTimeArguments": [
 	],
-	"startDate": 8,
-	"endDate": 1,
-	"query": "SELECT x.uuid, um.login_id, um.first_name, x.user_type FROM 
-(SELECT t1.uuid, t2.uuid re, (CASE WHEN t2.uuid is not null THEN 'returning user' ELSE 'new user' END) user_type FROM 
-(SELECT DISTINCT uuid FROM fliplearn_gamification.assessment_user_performance WHERE uuid is not null AND uuid <> '' AND created_on BETWEEN '2019-06-27 00:00:00' AND '2019-07-03 23:59:59') t1
-LEFT JOIN 
-(SELECT DISTINCT uuid FROM fliplearn_gamification.assessment_user_performance WHERE uuid IS NOT NULL AND uuid <> '' AND created_on < '2019-06-27 00:00:00') t2
-ON t1.uuid = t2.uuid) x
-LEFT JOIN 
-user_master um
-ON x.uuid=um.uuid;",
+	"startDate": 72,
+	"endDate": 65,
+	"query": "select user_type, group_concat(le) uuid, count(1) user_count from (SELECT t1.uuid le, t2.uuid re, (CASE WHEN t2.uuid is not null THEN 'returning user' ELSE 'new user' END) user_type FROM (SELECT DISTINCT uuid FROM doubtdatabase.assessment_user_performance WHERE uuid is not null AND uuid <> '' AND created_on BETWEEN 'startDate' AND 'endDate') t1 LEFT JOIN (SELECT DISTINCT uuid FROM doubtdatabase.assessment_user_performance WHERE uuid IS NOT NULL AND uuid <> '' AND created_on < 'startDate') t2 ON t1.uuid = t2.uuid) x group by x.user_type;",
 	"additionalOutput": {
 		"lastWeek": "weekNumber",
 		"weekDuration":"weekDuration"

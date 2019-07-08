@@ -6,8 +6,8 @@ import MySQLdb
 import calendar
 
 #path_to_json = sys.argv[1]
-path_to_json = 'json/daily/'
-json_files = [pos_json for pos_json in os.listdir(path_to_json) if pos_json.endswith("daily_quiz_count.json")]
+path_to_json = 'json/weekly/'
+json_files = [pos_json for pos_json in os.listdir(path_to_json) if pos_json.endswith("new_returning_user.json")]
 
 i = 1
 for file_name in json_files:
@@ -87,7 +87,7 @@ for file_name in json_files:
                         if key4 == 'currentMonth':
                             dict1[value4] = end_date.strftime("%Y-%m")
                         if key== 'weeekDuration':
-                            d[value]= end_date.isocalendar()[1]
+                            dict1[value]= end_date.isocalendar()[1]
                         
                     try:
                         dict1['key'] = fieldValues_key
@@ -125,9 +125,9 @@ for file_name in json_files:
                     if key == 'currentMonth':
                         d[value] = end_date.strftime("%Y-%m")
                     if key== 'lastWeek':
-                        d[value]= end_date.strftime("%y") + "-W" + end_date.strftime("%V")
+                        d[value]= end_date.strftime("%Y") + "-W" + end_date.strftime("%V")
                     if key== 'weekDuration':
-                        d[value] = start_date.strftime("%d-%b-%Y") + " - " + end_date.strftime("%d-%b-%Y")
+                        d[value] = start_date.strftime("%d %b-%Y") + " - " + end_date.strftime("%d %b-%Y")
                         
                 json_data.append(d)
             print(json_data)
@@ -136,9 +136,7 @@ for file_name in json_files:
             sourceDb.close()
             
         destClient.close()
-print('Job Ended : '+data['jobName'])		
+        print('Job Ended : '+data['jobName'])	
 i += 1
 
-today=datetime.date.today()
-end_date=(today - datetime.timedelta (days = 150))
-print(end_date.strftime("%Y") + "-W" + end_date.strftime("%V"))
+

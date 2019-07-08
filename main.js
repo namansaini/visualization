@@ -18,8 +18,8 @@ $(document).ready(function(){
 		}
 		else if(this.id == 'btn3')
 		{
-			week= $("#week").val();
-			
+			startWeek= $("#startWeek").val();
+			endWeek= $("#endWeek").val();
 		}
 		console.log("{ "+startDt+ ", "+ endDt + ", " + startMonth + ", " + endMonth + " }");
 		if((startDt == '' || endDt == '') || (startMonth=='' || endMonth=='')){
@@ -31,9 +31,16 @@ $(document).ready(function(){
 		$('#chart_div').html('');
 		$("#design").css('display','block');
 		$('#title, #alert').css('display','none');
+		$("#table_view").css('display','none');
 		google.charts.setOnLoadCallback(drawChart);
 		$("a").removeClass("active");
 		$("#"+query).addClass("active");
+		
+	});
+
+	$("#back").click(function(){
+		$("#table_view").css('display','none');
+		$('#chart_div').css('display','block');
 		
 	})
 	
@@ -47,7 +54,7 @@ $(document).ready(function(){
 			$('#date').css('display','none');
 			$("#weekbox").css('display','none');
 		}
-		else if(query == 'new_returning_user')
+		else if(query == 'weekly_assessment_users')
 		{
 			$("#weekbox").css('display','block');
 			$("#date").css('display','none');
@@ -65,12 +72,12 @@ var jsonObj;
 function drawChart(){
 	var link;
 	if(query == "school_range")
-		link = `http://quizreport.fliplearn.com:8081/report/${query}?startMonth=${startMonth}&endMonth=${endMonth}`;
+		link = `http://localhost:8081/report/${query}?startMonth=${startMonth}&endMonth=${endMonth}`;
 	else
-	if(query == "new_returning_user")
-		link = `http://quizreport.fliplearn.com:8081/report/${query}?week=${week}`;
+	if(query == "weekly_assessment_users")
+		link = `http://localhost:8081/report/${query}?startWeek=${startWeek}&endWeek=${endWeek}`;
 	else
-		link = `http://quizreport.fliplearn.com:8081/report/${query}?startDt=${startDt}&endDt=${endDt}`;
+		link = `http://localhost:8081/report/${query}?startDt=${startDt}&endDt=${endDt}`;
 	
     console.log(link);
     $.ajax({
@@ -112,7 +119,7 @@ function drawChart(){
 					for (i = 0; i < uniqueRanges.length; i++) {
                         var item = [uniqueRanges[i]];
                         for(j = 0; j < uniqueMonths.length; j++){
-                            item.push( getCount(uniqueRanges[i], uniqueMonths[j],jsonData));
+                            item.push( getCount(uniqueRanges[i], uniqueMonths[j]));
                             console.log(uniqueRanges[i]+" "+uniqueMonths[j]+" "+getCount(uniqueRanges[i], uniqueMonths[j]));
                         }
                         responseJson.push(item);
@@ -247,43 +254,81 @@ function drawChart(){
 					
 					break;
 
-				case "new_returning_user":
-					$("#weekly_user_tab").css('display','block');
-					$("#title").html($('#'+query).html())
-					var a=$("#new_user_table");
-					var b=$("#returning_user_table");
+				case "weekly_assessment_users":
+					$("#chart_div").css('display','block');
+					var responseJson = [];
+					var heading = [];
+					heading=['Week','New User','Returning User'];
+					responseJson.push(heading);
 
-					var aJson = $.grep( jsonObj, function( n, i ) {
-						return n.user_type==='new user';
-					});
+					var userTypeLookup = {},  weekLookup = {};
+                    var uniqueUserType = [], uniqueWeek = [];
+                    for (var item, i = 0;item = jsonObj[i++];) {
+                        var week = item.weekNumber;
+                        if (!(week in weekLookup)) {
+                            weekLookup[week] = 1;
+                            uniqueWeek.push(week);
+                        }
+                        
+                        var userType = item.user_type;
+                        if (!(userType in userTypeLookup)) {
+                            userTypeLookup[userType] = 1;
+                            uniqueUserType.push(userType);
+                        }
+					}
+					
+					for (i = 0; i < uniqueWeek.length; i++) {
+                        var item = [uniqueWeek[i]];
+                        for(j = 0; j < uniqueUserType.length; j++){
+                            item.push( getUserCount(uniqueWeek[i], uniqueUserType[j]));
+                        }
+                        responseJson.push(item);
+					}
+					console.log(responseJson);
+					var data = google.visualization.arrayToDataTable(responseJson);
+                    var options = {
+                        chart: {
+							title: $('#'+query).html()
+                        }
+                    };
+                    
+                    var chart = new google.charts.Bar(document.getElementById("chart_div"));
+					chart.draw(data, google.charts.Bar.convertOptions(options));
 
-					var bJson = $.grep( jsonObj, function( n, i ) {
-						return n.user_type==='returning user';
-					});
-					a.DataTable(
+					google.visualization.events.addListener(chart, 'select', selectHandler);
+
+					function selectHandler() 
+					{
+						var week, type;
+						var selection = chart.getSelection();
+						for (var i = 0; i < selection.length; i++) 
 						{
-							"data":aJson,
-							"columns" : 
-							[
-								{ "data" : "User Id" },
-								{ "data" : "Login Id" },
-								{ "data" : "First Name" },
-								{ "data" : "User Type" }
-							]
+							var item = selection[i];
+							if (item.row != null && item.column != null)
+							{
+								week = data.getValue(chart.getSelection()[0].row, 0);
+
+								if(item.column == 1)
+									type = 'new user';
+								else
+								if(item.column == 2)
+									type = 'returning user';
+							}
 						}
-					);
-					b.DataTable(
+						var uuidString;
+						for (var item, i = 0; item = jsonObj[i++];) 
 						{
-							"data":bJson,
-							"columns" : 
-							[
-								{ "data" : "User Id" },
-								{ "data" : "Login Id" },
-								{ "data" : "First Name" },
-								{ "data" : "User Type" }
-							]
+							if(item.user_type == type && item.weekNumber == week)
+							{
+								uuidString = item.uuid;
+								break;
+							}
 						}
-					);
+						console.log(uuidString);
+						getUserInfoAjax(uuidString);
+					}
+					
+					break;
 				default:
 					alert("Something wrong ! query param mismatched !");
 			}
@@ -293,6 +338,7 @@ function drawChart(){
 			$('#alertMsg').html("Status: " + textStatus+", "+"Error: " + errorThrown);
 			$('#alert').css('display', 'block');
 			$("#design").css('display','none');
+			console.log(XMLHttpRequest);
 		}       
 		
     })
@@ -305,3 +351,57 @@ function getCount(range, month){
 	}
 	return 0;
 }
+
+function getUserCount(week, user){
+	for (var item, i = 0; item = jsonObj[i++];) {
+		if(item.user_type == user && item.weekNumber == week)
+			return item.user_count;
+	}
+	return 0;
+}
+
+function getUserInfoAjax(uuid)
+{
+			$.ajax ({
+				url: `http://localhost:8081/report/get_user_info`,  
+				error: function (xhr, error, code)
+            {
+					console.log(xhr);
+					console.log(code);
+					console.log(error);
+            },
+				data: {
+					uuid:uuid
+				},
+				type: "POST",
+				dataType: "json",
+				success:function(jsonData)
+				{
+					console.log(jsonData);
+					var temp=JSON.stringify(jsonData);
+					var jsonObj2 = JSON.parse(temp);
+					console.log(jsonObj2);
+					$("#chart_div").css('display','none');
+					$("#table_view").css('display','block');
+					populateDatatable(jsonObj2);
+				}
+			});
+	
+}
+function populateDatatable(jsonObj2)
+{
+	$("#user_data_table").dataTable().fnClearTable();
+	for (var item, i = 0; item = jsonObj2[i++];) 
+	{
+		$("#user_data_table").dataTable().fnAddData
+		(
+			[
+				item.uuid,
+				item.login_id,
+				item.first_name
+			]
+			// jsonObj2
+		);
+	}
+}
+

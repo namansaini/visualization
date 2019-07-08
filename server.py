@@ -5,10 +5,12 @@ Created on Tue Jun 18 11:29:18 2019
 """
 import pymongo
 import flask
+import sys
 from flask import request
 from bson.json_util import dumps
 from flask_cors import CORS
 from operator import itemgetter
+import MySQLdb
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -175,20 +177,49 @@ def platform_wise_otp_counts():
     return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
 
 #13
-@app.route('/report/new_returning_user', methods=['GET'])
-def new_returning_user():
+@app.route('/report/weekly_assessment_users', methods=['GET'])
+def weekly_assessment_users():
     query_parameters = request.args
-    week=query_parameters.get('startDt')
-    
-    if not (week):
+    startWeek=query_parameters.get('startWeek')
+    endWeek=query_parameters.get('endWeek')
+
+    if not (startWeek or endWeek):
         return "<h1>One or More Arguments not Specified</h1>", 500
-    database=connection['data_analytics']
-    collection=database['new_returning_user ']
-    
-    return dumps(collection.find({"weekNumber":week},{"_id":0,"createdate":0}))
+    database=connection['data_analysis']
+    collection=database['new_returning_user']
+    return dumps(collection.find({"weekNumber":{"$gte":startWeek,"$lte":endWeek}},{"_id":0,"createdate":0}))
+
+#13.1
+@app.route('/report/get_user_info', methods=['POST'])
+def get_user_info():
+    uuid=request.form['uuid']
+    sourceDb=MySQLdb.connect('localhost','root','abc54312','doubtdatabase')
+    sourceCursor=sourceDb.cursor()
+
+
+    if not (uuid):
+        return "<h1> Arguments not Specified</h1>", 500
+    uuidList = uuid.split(',')
+    uuidStr=''
+    for x in uuidList:
+        if x==uuidList[-1]:
+            uuidStr+="'" + x + "'"
+        else:
+            uuidStr+="'" + x + "',"
+    x=sourceCursor.execute("SELECT um.uuid, um.login_id, um.first_name FROM user_master um WHERE uuid IN (" + uuidStr + ");")   
+    row_headers=[x[0] for x in sourceCursor.description]
+    rv = sourceCursor.fetchall()
+    json_data=[]
+    for result in rv:
+        d=dict(zip(row_headers,result))
+        json_data.append(d)
+    print(json_data)
+    return dumps(json_data)
 
 @app.errorhandler(404)
 def page_not_found(e):
     return "<h1>404</h1><p>The resource could not be found.</p>", 404
 
+app.debug=False
 app.run(port=8081)
+

@@ -42,7 +42,7 @@
 			<a href="javascript:void(0)" id="daily_time_per_user_class_subject" class="list-group-item">Daily Time Spent per User in Assessments per Class per Subject</a>
 			<a href="javascript:void(0)" id="doubt_forum_counts" class="list-group-item">Doubt Forum Counts</a>
 			<a href="javascript:void(0)" id="platform_wise_otp_counts" class="list-group-item">Platform wise otp Counts</a>
-			<a href="javascript:void(0)" id="new_returning_user" class="list-group-item">Weekly New and Returning Users</a>
+			<a href="javascript:void(0)" id="weekly_assessment_users" class="list-group-item">Weekly New and Returning Users</a>
 		</div>
 	</div>
     <div class="col-sm-9" style="background-color:lavender;">
@@ -71,17 +71,17 @@
 			</form>
 			<form class="form-inline" action="javascript:void(0)" id="weekbox" style="display: none;">
 				<div class="form-group">
-					<label for="week">Week: </label>
-					<input type="week" id="week">
+					<label for="week">Start Week: </label>
+					<input type="week" id="startWeek">
+				</div>
+				<div class="form-group">
+					<label for="week">End Week: </label>
+					<input type="week" id="endWeek">
 				</div>
 				<button type="button" class="btn btn-default" id="btn3">Submit</button>
 			</form>
 		</div>
 
-		<ul class="nav nav-tabs" id="weekly_user_tab" style="display: none">
-			<li class="active"><a data-toggle="tab" href="#new_user">New User</a></li>
-			<li><a data-toggle="tab" href="#returning_user">Returning User</a></li>
-		</ul>
 
 		
 
@@ -91,21 +91,30 @@
 			<div id="design"style="display: none; position: absolute;top:50%; left:50%" >
 				<img src="Preloader_2.gif" >
 			</div>
+			<div id="table_view" style="display:none">
+
+				<button id="back">
+					Back
+				</button>
+				<br>
+				<br>
+				<table id="user_data_table" class="table table-bordered table-striped" >
+					<thead>
+						<tr>
+							<th>User Id</th>
+							<th>Login Id</th>
+							<th>First Name</th>
+						</tr>
+					</thead>
+				</table>
+				
+			</div>
 			<div class="alert alert-danger alert-dismissible fade in" style="display:none" id="alert">
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 				<strong>Danger!</strong> <span id='alertMsg'></span>
 			</div>
 		</div>
 
-		<div class="tab-content">
-				<div id="new_user" class="tab-pane fade in active">
-					<table id="new_user_table"></table>
-				</div>
-				<div id="returning_user" class="tab-pane fade">
-					<table id="returning_user_table"></table>
-				</div>
-		</div>
-	
 	</div>
   </div>
 </div>
