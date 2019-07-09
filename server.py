@@ -43,7 +43,9 @@ def school_strength():
         return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['dest_prod_log']
     collection=database['school_strength']
-    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=list(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=sorted(data, key=itemgetter('date'))
+    return dumps(data)
 
 #3
 @app.route('/report/user_info', methods=['GET'])
@@ -56,7 +58,9 @@ def user_info():
         return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['dest_prod_log']
     collection=database['user_info']
-    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=list(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=sorted(data, key=itemgetter('date'))
+    return dumps(data)
 
 #4
 @app.route('/report/daily_quiz_class_subject', methods=['GET'])
@@ -69,7 +73,9 @@ def daily_quiz_class_subject():
         return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['quiz_report_data']
     collection=database['daily_quiz_class_subject']
-    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=list(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=sorted(data, key=itemgetter('date'))
+    return dumps(data)
 
 #5
 @app.route('/report/daily_quiz_count', methods=['GET'])
@@ -82,7 +88,9 @@ def daily_quiz_count():
         return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['quiz_report_data']
     collection=database['daily_quiz_count']
-    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=list(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=sorted(data, key=itemgetter('date'))
+    return dumps(data)
 
 #6  
 @app.route('/report/daily_user_class_subject', methods=['GET'])
@@ -95,7 +103,9 @@ def daily_user_class_subject():
         return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['quiz_report_data']
     collection=database['daily_user_class_subject']
-    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=list(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=sorted(data, key=itemgetter('date'))
+    return dumps(data)
 
 #7
 @app.route('/report/daily_users_count_quiz', methods=['GET'])
@@ -108,7 +118,9 @@ def daily_users_count_quiz():
         return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['quiz_report_data']
     collection=database['daily_users_count_quiz']
-    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=list(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=sorted(data, key=itemgetter('date'))
+    return dumps(data)
 
 #8
 @app.route('/report/quiz_played_per_user', methods=['GET'])
@@ -121,7 +133,9 @@ def quiz_played_per_user():
         return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['quiz_report_data']
     collection=database['quiz_played_per_user']
-    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=list(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=sorted(data, key=itemgetter('date'))
+    return dumps(data)
 
 #9
 @app.route('/report/daily_time_spent_user_quiz', methods=['GET'])
@@ -134,7 +148,9 @@ def daily_time_spent_user_quiz():
         return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['quiz_report_data']
     collection=database['daily_time_spent_user_quiz']
-    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=list(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=sorted(data, key=itemgetter('date'))
+    return dumps(data)
 
 #10
 @app.route('/report/daily_time_per_user_class_subject', methods=['GET'])
@@ -147,7 +163,9 @@ def daily_time_per_user_class_subject():
         return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['quiz_report_data']
     collection=database['daily_time_per_user_class_subject']
-    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=list(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=sorted(data, key=itemgetter('date'))
+    return dumps(data)
 
 #11
 @app.route('/report/doubt_forum_counts', methods=['GET'])
@@ -160,7 +178,9 @@ def doubt_forum_counts():
         return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['data_analysis']
     collection=database['doubt_forum_counts']
-    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=list(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=sorted(data, key=itemgetter('date'))
+    return dumps(data)
 
 
 #12
@@ -174,7 +194,9 @@ def platform_wise_otp_counts():
         return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['data_analysis']
     collection=database['platform_wise_otp_counts']
-    return dumps(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=list(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=sorted(data, key=itemgetter('date'))
+    return dumps(data)
 
 #13
 @app.route('/report/weekly_assessment_users', methods=['GET'])
@@ -187,7 +209,9 @@ def weekly_assessment_users():
         return "<h1>One or More Arguments not Specified</h1>", 500
     database=connection['data_analysis']
     collection=database['new_returning_user']
-    return dumps(collection.find({"weekNumber":{"$gte":startWeek,"$lte":endWeek}},{"_id":0,"createdate":0}))
+    data=list(collection.find({"weekNumber":{"$gte":startWeek,"$lte":endWeek}},{"_id":0,"createdate":0}))
+    data=sorted(data, key=itemgetter('weekNumber'))
+    return dumps(data)
 
 #13.1
 @app.route('/report/get_user_info', methods=['POST'])
