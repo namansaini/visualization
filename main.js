@@ -3,12 +3,12 @@ var startDt;
 var endDt;
 var startMonth;
 var endMonth;
-var week;
+var startWeek, endWeek;
 $(document).ready(function(){
     google.charts.load('current', {packages: ['bar','corechart','table']});
     
 	$("#btn, #btn2, #btn3").click(function(){
-		startDt = endDt = startMonth = endMonth = undefined;
+		startDt = endDt = startMonth = endMonth = startWeek = endWeek= undefined;
 		if(this.id == 'btn'){
 			startDt = $("#startDt").val();
 			endDt = $("#endDt").val();
@@ -22,7 +22,7 @@ $(document).ready(function(){
 			endWeek= $("#endWeek").val();
 		}
 		console.log("{ "+startDt+ ", "+ endDt + ", " + startMonth + ", " + endMonth + " }");
-		if((startDt == '' || endDt == '') || (startMonth=='' || endMonth=='')){
+		if((startDt == '' || endDt == '') || (startMonth=='' || endMonth=='' || startWeek == '' || endWeek == '')){
             alert('Choose fields before proceeeding...');
             return false;
         }
@@ -41,7 +41,7 @@ $(document).ready(function(){
 	$("#back").click(function(){
 		$("#table_view").css('display','none');
 		$('#chart_div').css('display','block');
-		
+
 	})
 	
 	$( "a" ).click(function() {
