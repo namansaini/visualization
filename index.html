@@ -43,6 +43,8 @@
 			<a href="javascript:void(0)" id="doubt_forum_counts" class="list-group-item">Doubt Forum Counts</a>
 			<a href="javascript:void(0)" id="platform_wise_otp_counts" class="list-group-item">Platform wise otp Counts</a>
 			<a href="javascript:void(0)" id="weekly_assessment_users" class="list-group-item">Weekly New and Returning Users</a>
+			<a href="javascript:void(0)" id="platform_wise_activities" class="list-group-item">Platform Wise Activities</a>
+			<a href="javascript:void(0)" id="platform_wise_users" class="list-group-item">Platform Wise Users</a>
 		</div>
 	</div>
     <div class="col-sm-9" style="background-color:lavender;">
@@ -87,12 +89,21 @@
 
 		<div class="col-sm-12" style="margin-top:20px; background-color:white; padding:20px;">
 			<h4 id="title" style="display:none"></h4>
+
+			<ul class="nav nav-tabs" id="tabs" style="display:none">
+				<li id="Android" class="active"><a data-toggle="tab" href="javascript:void(0)" >Android</a></li>
+				<li id="iOS"><a data-toggle="tab" href="javascript:void(0)">IOS</a></li>
+				<li id="Web"><a data-toggle="tab" href="javascript:void(0)">Web</a></li>
+			</ul>
+
 			<div id="chart_div" style=" display: none; height:400px" ></div>
 			<div id="design"style="display: none; position: absolute;top:50%; left:50%" >
 				<img src="Preloader_2.gif" >
 			</div>
-			<div id="table_view" style="display:none">
 
+			
+
+			<div id="table_view" style="display:none">
 				<button id="back">
 					Back
 				</button>
@@ -101,7 +112,7 @@
 				<table id="user_data_table" class="table table-bordered table-striped" >
 					<thead>
 						<tr>
-							<th>User Id</th>
+							<th>UUID</th>
 							<th>Login Id</th>
 							<th>First Name</th>
 						</tr>
@@ -116,7 +127,7 @@
 		</div>
 
 	</div>
-  </div>
+</div>
 </div>
 
 </body>

@@ -6,8 +6,8 @@ import MySQLdb
 import calendar
 
 #path_to_json = sys.argv[1]
-path_to_json = 'json/weekly/'
-json_files = [pos_json for pos_json in os.listdir(path_to_json) if pos_json.endswith("new_returning_user.json")]
+path_to_json = 'json/daily/'
+json_files = [pos_json for pos_json in os.listdir(path_to_json) if pos_json.endswith("platform_wise_users.json")]
 
 i = 1
 for file_name in json_files:
@@ -77,7 +77,7 @@ for file_name in json_files:
                     for key2, value2 in document.items():
                         if key2 == '_id':
                             for key3, value3 in document['_id'].items():
-                                dict[key3] = value3
+                                dict1[key3] = value3
                         else:
                             dict1[key2] = value2
                     dict1['createdate'] = datetime.datetime.today()
@@ -95,7 +95,7 @@ for file_name in json_files:
                         print ('')
 						
                     print (dict1)
-                    destCol.insert_one(dict)
+                    destCol.insert_one(dict1)
                     dict1.clear()
                     sourceClient.close()
                     

@@ -5,7 +5,6 @@ Created on Tue Jun 18 11:29:18 2019
 """
 import pymongo
 import flask
-import sys
 from flask import request
 from bson.json_util import dumps
 from flask_cors import CORS
@@ -239,6 +238,36 @@ def get_user_info():
         json_data.append(d)
     print(json_data)
     return dumps(json_data)
+
+#14
+@app.route('/report/platform_wise_activities', methods=['GET'])
+def platform_wise_activities():
+    query_parameters = request.args
+    startDt=query_parameters.get('startDt')
+    endDt=query_parameters.get('endDt')
+    
+    if not (startDt or endDt):
+        return "<h1>One or More Arguments not Specified</h1>", 500
+    database=connection['data_analysis']
+    collection=database['platform_wise_activities']
+    data=list(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=sorted(data, key=itemgetter('date'))
+    return dumps(data)
+
+#15
+@app.route('/report/platform_wise_users', methods=['GET'])
+def platform_wise_users():
+    query_parameters = request.args
+    startDt=query_parameters.get('startDt')
+    endDt=query_parameters.get('endDt')
+    
+    if not (startDt or endDt):
+        return "<h1>One or More Arguments not Specified</h1>", 500
+    database=connection['data_analysis']
+    collection=database['platform_wise_users']
+    data=list(collection.find({"date":{"$gte":startDt,"$lte":endDt}},{"_id":0,"createdate":0}))
+    data=sorted(data, key=itemgetter('date'))
+    return dumps(data)
 
 @app.errorhandler(404)
 def page_not_found(e):

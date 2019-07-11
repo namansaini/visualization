@@ -12,7 +12,8 @@ $(document).ready(function(){
 		if(this.id == 'btn'){
 			startDt = $("#startDt").val();
 			endDt = $("#endDt").val();
-		}else if(this.id == 'btn2'){
+		}
+		else if(this.id == 'btn2'){
 			startMonth = $("#startMonth").val();
 			endMonth = $("#endMonth").val();
 		}
@@ -34,21 +35,23 @@ $(document).ready(function(){
 		$("#table_view").css('display','none');
 		google.charts.setOnLoadCallback(drawChart);
 		$("a").removeClass("active");
-		$("#"+query).addClass("active");
-		
+		$("#"+query).addClass("active");	
 	});
 
-	$("#back").click(function(){
+	$("#back").click(function()
+	{
 		$("#table_view").css('display','none');
 		$('#chart_div').css('display','block');
-
-	})
+	});
 	
-	$( "a" ).click(function() {
+	$( "#school_range,#school_strength,#user_info,#daily_quiz_count,#daily_quiz_class_subject,#daily_users_count_quiz,#daily_user_class_subject,#quiz_played_per_user,#daily_time_spent_user_quiz,#daily_time_per_user_class_subject,#doubt_forum_counts,#platform_wise_otp_counts,#weekly_assessment_users,#platform_wise_activities,#platform_wise_users" )
+	.click(function() 
+	{
 		query = this.id;
 		$("a").removeClass("active");
 		$("#"+this.id).addClass("active");
 		console.log(query);
+		$("#tabs").css('display','none');
 		if(query == 'school_range'){
 			$("#month").css('display','block');
 			$('#date').css('display','none');
@@ -83,7 +86,6 @@ function drawChart(){
     $.ajax({
 		url: link,//"http://quizreport.fliplearn.com:8081/report/school_range?startMonth=2019-04&endMonth=2019-06",
 		success:function(jsonData){
-			console.log(jsonData);
             jsonObj = JSON.parse(jsonData);
             console.log(jsonObj);
 			
@@ -329,6 +331,18 @@ function drawChart(){
 					}
 					
 					break;
+				case "platform_wise_activities":
+				case "platform_wise_users":
+					$("#title,#chart_div").css('display','block');
+					$("#tabs").css('display','block');
+					$("#title").html($('#'+query).html());
+					tabsData('Android');
+					$("li").click(function()
+					{
+						var platform=this.id;
+						tabsData(platform);
+					});
+					break;
 				default:
 					alert("Something wrong ! query param mismatched !");
 			}
@@ -343,7 +357,57 @@ function drawChart(){
 		
     })
 }
+function tabsData(platform1)
+{
 
+						//{
+							var filtered_json;
+							
+
+							var platform=platform1;
+							console.log(platform);
+							filtered_json = jsonObj.filter(function (entry) {
+								return entry.platform === platform;
+							});
+						
+							var data = new google.visualization.DataTable();
+							console.log(filtered_json);
+							if(query == 'platform_wise_activities')
+							{
+								data.addColumn('string','Activity');
+								data.addColumn('number','Activity Count');
+							}
+							else
+							if(query == 'platform_wise_users')
+							{
+								data.addColumn('string','UUID');
+								data.addColumn('string','Login ID');
+								data.addColumn('string','Name');
+								data.addColumn('string','Class Name');
+								data.addColumn('number','Count');
+								
+							}
+							data.addColumn('string','Date');
+							
+							var responseJson = [];
+							for(var item, i=0; item = filtered_json[i++];)
+							{
+								var temp = [];
+								if(query == 'platform_wise_activities')
+									temp=[item.activity, item.activity_count, item.date];
+								else
+								if(query == 'platform_wise_users')
+									temp=[item.uuid, item.login_id, item.user_name, item.class_name, item.activity_count, item.date];
+								responseJson.push(temp);
+							}
+							data.addRows(responseJson);
+							var table = new google.visualization.Table(document.getElementById("chart_div"));
+							table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+							$('.google-visualization-table-table').addClass('display');
+							$('.google-visualization-table-table').addClass('nowrap');
+							$('.google-visualization-table-table').dataTable({dom: 'lBfrtip',buttons: ['copy', 'csv', 'excel', 'pdf', 'print']});
+						//});
+}
 function getCount(range, month){
 	for (var item, i = 0; item = jsonObj[i++];) {
 		if(item.type == range && item.month == month)
@@ -400,7 +464,6 @@ function populateDatatable(jsonObj2)
 				item.login_id,
 				item.first_name
 			]
-			// jsonObj2
 		);
 	}
 }

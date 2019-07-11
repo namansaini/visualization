@@ -1,0 +1,42 @@
+{
+	"jobName": "platform_wise_activities",
+    "source": 
+    {
+		"dbType": "mongodb",
+		"host": "stgadmindb.fliplearn.com",
+		"port": "27017",
+		"dbName": "mongo_logdb",
+		"collection": "stg_log"
+	},
+    "destination": 
+    {
+		"dbType": "mongodb",
+		"host": "localhost",
+		"port": "27017",
+		"dbName": "data_analysis",
+		"collection": "platform_wise_activities"
+	},
+	"runTimeArguments": [],
+	"startDate": 76,
+	"endDate": 75,
+    "query": 
+    [
+		{
+            "$match":
+            {
+				"accessDT":{ "$gte": "startDate", "$lte": "endDate"	},
+                "UUID":{"$nin": [null, ""]},
+                "feature_name":{"$nin": [null, ""]}
+			}
+		},
+		{
+            "$group": 
+            {
+				"_id": {"platform":"$accessing_app","activity":"$feature_name"}, "activity_count":{"$sum":1}
+            }
+        }
+	],
+	"additionalOutput": {
+		"lastDate": "date"
+	}
+}
