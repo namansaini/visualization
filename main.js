@@ -72,6 +72,7 @@ $(document).ready(function(){
 })
 
 var jsonObj;
+var prevPlatform = 'Android';
 function drawChart(){
 	var link;
 	if(query == "school_range")
@@ -336,9 +337,13 @@ function drawChart(){
 					$("#title,#chart_div").css('display','block');
 					$("#tabs").css('display','block');
 					$("#title").html($('#'+query).html());
+
+					$("#"+prevPlatform).removeClass('active');
+					$("#Android").addClass('active');
 					tabsData('Android');
 					$("li").click(function()
 					{
+						prevPlatform=this.id;
 						var platform=this.id;
 						tabsData(platform);
 					});
