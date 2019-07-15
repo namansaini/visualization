@@ -1,4 +1,5 @@
 var query;
+var query2;
 var startDt;
 var endDt;
 var startMonth;
@@ -7,13 +8,18 @@ var startWeek, endWeek;
 $(document).ready(function(){
     google.charts.load('current', {packages: ['bar','corechart','table']});
     
-	$("#btn, #btn2, #btn3").click(function(){
+	$("#btn, #btn2, #btn3").click(function()
+	{
+		query = query2;
+		$("#tabs").css('display','none');
 		startDt = endDt = startMonth = endMonth = startWeek = endWeek= undefined;
-		if(this.id == 'btn'){
+		if(this.id == 'btn')
+		{
 			startDt = $("#startDt").val();
 			endDt = $("#endDt").val();
 		}
-		else if(this.id == 'btn2'){
+		else if(this.id == 'btn2')
+		{
 			startMonth = $("#startMonth").val();
 			endMonth = $("#endMonth").val();
 		}
@@ -47,17 +53,17 @@ $(document).ready(function(){
 	$( "#school_range,#school_strength,#user_info,#daily_quiz_count,#daily_quiz_class_subject,#daily_users_count_quiz,#daily_user_class_subject,#quiz_played_per_user,#daily_time_spent_user_quiz,#daily_time_per_user_class_subject,#doubt_forum_counts,#platform_wise_otp_counts,#weekly_assessment_users,#platform_wise_activities,#platform_wise_users" )
 	.click(function() 
 	{
-		query = this.id;
+		query2 = this.id;
 		$("a").removeClass("active");
 		$("#"+this.id).addClass("active");
 		console.log(query);
-		$("#tabs").css('display','none');
-		if(query == 'school_range'){
+		//$("#tabs").css('display','none');
+		if(query2 == 'school_range'){
 			$("#month").css('display','block');
 			$('#date').css('display','none');
 			$("#weekbox").css('display','none');
 		}
-		else if(query == 'weekly_assessment_users')
+		else if(query2 == 'weekly_assessment_users')
 		{
 			$("#weekbox").css('display','block');
 			$("#date").css('display','none');
