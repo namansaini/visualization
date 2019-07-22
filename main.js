@@ -161,7 +161,7 @@ function drawChart(){
 					var data = new google.visualization.DataTable();
 					var responseJson = [];
 					if(query == 'school_strength'){
-						data.addColumn('string', 'School');		data.addColumn('number', 'Count');
+						data.addColumn('string', 'School');		data.addColumn('string', 'Role');	data.addColumn('number', 'Count');
 					} 
 					else if(query == 'user_info'){
 						data.addColumn('string', 'UUID');		data.addColumn('string', 'Role Name');	data.addColumn('string', 'School Name');
@@ -189,7 +189,7 @@ function drawChart(){
 					for(var item, i=0; item = jsonObj[i++];){
 						var temp = [];
 						if(query == 'school_strength'){
-							temp = [item.school_name, item.count];
+							temp = [item.school_name, item.role_name, item.count];
 						}
 						else if(query == 'user_info'){
 							temp = [item.UUID, item.role_name, item.school_name, item.class_name, item.time_spent/60000, item.count];
@@ -478,4 +478,3 @@ function populateDatatable(jsonObj2)
 		);
 	}
 }
-

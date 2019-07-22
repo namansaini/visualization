@@ -16,8 +16,8 @@
 	},
 	"runTimeArguments": [
 	],
-	"startDate": 74,
-	"endDate": 73,
+	"startDate": 100,
+	"endDate": 99,
 	"query": [
 		{
 			"$match":{
@@ -28,7 +28,7 @@
 		},
 		{
 			"$group": {
-				"_id": {"unique_id":"$school_name"}, "unique_users":{"$addToSet":"$UUID"}
+				"_id": {"unique_id":"$school_name", "role_name":{"$role_name"}}, "unique_users":{"$addToSet":"$UUID"}
 			}
 		},
 		{
